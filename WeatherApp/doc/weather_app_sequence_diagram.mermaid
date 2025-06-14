@@ -1,0 +1,114 @@
+sequenceDiagram
+    participant U as User
+    participant F as Frontend (JS)
+    participant R as Flask Routes
+    participant WS as Weather Service
+    participant DS as Database Service
+    participant API as WeatherAPI.com
+    participant DB as MySQL Database
+
+    %% Weather Search Flow
+    Note over U,DB: Weather Data Request Flow
+    
+    U->>F: Enter city name & submit
+    F->>F: Validate input
+    F->>R: GET /api/weather/{city}
+    
+    R->>WS: fetch_weather_data(city)
+    WS->>API: GET current weather
+    API-->>WS: JSON weather response
+    
+    alt API Success
+        WS->>DS: save_city_and_weather(data)
+        DS->>DB: INSERT/UPDATE cities
+        DS->>DB: INSERT weather_data
+        DB-->>DS: Success confirmation
+        DS-->>WS: city_id
+        WS-->>R: Formatted weather data
+        R-->>F: JSON response (200)
+        F->>F: displayWeather(data)
+        F->>U: Show weather card
+    else API Error
+        WS-->>R: Error response
+        R-->>F: JSON error (404)
+        F->>U: Show error message
+    end
+
+    %% Favorites Management Flow
+    Note over U,DB: Add to Favorites Flow
+    
+    U->>F: Click "Add to Favorites"
+    F->>R: POST /api/favorites
+    R->>DS: Check if city exists
+    DS->>DB: SELECT city by name
+    DB-->>DS: City data
+    
+    alt City Found
+        DS->>DB: INSERT into favorites
+        alt Success
+            DB-->>DS: Insert confirmation
+            DS-->>R: Success message
+            R-->>F: JSON success (200)
+            F->>F: loadFavorites()
+            F->>R: GET /api/favorites
+            R->>DS: get_favorites()
+            DS->>DB: SELECT favorites with weather
+            DB-->>DS: Favorites data
+            DS-->>R: Formatted favorites
+            R-->>F: JSON favorites list
+            F->>U: Update favorites display
+        else Duplicate Entry
+            DB-->>DS: Constraint error
+            DS-->>R: Error message
+            R-->>F: JSON error (400)
+            F->>U: Show "Already in favorites"
+        end
+    else City Not Found
+        DS-->>R: City not found error
+        R-->>F: JSON error (404)
+        F->>U: Show error message
+    end
+
+    %% Remove Favorites Flow
+    Note over U,DB: Remove from Favorites Flow
+    
+    U->>F: Click remove button
+    F->>R: DELETE /api/favorites/{city_id}
+    R->>DS: Remove from favorites
+    DS->>DB: DELETE from favorites
+    DB-->>DS: Delete confirmation
+    DS-->>R: Success message
+    R-->>F: JSON success (200)
+    F->>F: loadFavorites()
+    F->>U: Update favorites display
+
+    %% Weather History Flow
+    Note over U,DB: Weather History Request Flow
+    
+    U->>F: Request weather history
+    F->>R: GET /api/history/{city}
+    R->>DS: get_weather_history(city)
+    DS->>DB: SELECT weather history
+    DB-->>DS: Historical data
+    DS-->>R: Formatted history
+    R-->>F: JSON history data
+    F->>U: Display weather trends
+
+    %% Error Handling
+    Note over U,DB: Error Scenarios
+    
+    alt Database Connection Error
+        DS->>DB: Connection attempt
+        DB-->>DS: Connection failed
+        DS-->>R: Database error
+        R-->>F: JSON error (500)
+        F->>U: Show system error
+    end
+    
+    alt Network Error
+        WS->>API: Request timeout
+        API-->>WS: Network error
+        WS-->>R: API unavailable
+        R-->>F: JSON error (503)
+        F->>U: Show network error
+    end
