@@ -33,9 +33,36 @@
    - Alerts for profile updates or new comments
 
 ---
+## Technical Architecture
 
+alumni_slam_book/
+├── core/               # Project settings
+├── users/              # Auth & OAuth logic[5]
+├── profiles/           # Profile models/views
+│   ├── models.py       # UserProfile extends AbstractUser
+│   └── forms.py        # Profile edit forms
+├── templates/          # Bootstrap 5 UI[3]
+│   └── profiles/
+│       ├── edit.html   # WYSIWYG editor
+│       └── view.html   # Public profile
+└── static/
+    └── js/             # Image cropper
+
+---
+
+## Development Timeline - Gantt Chart (Table Format)
+
+| Phase               | Duration | Key Deliverables                          | Start Date  | End Date    | Dependencies          |
+|---------------------|----------|-------------------------------------------|-------------|-------------|-----------------------|
+| Project Setup       | 3 days   | Python Django env setup, MySQL config     | 2025-06-15  | 2025-06-17  | -                     |
+| Database Design     | 5 days   | Db diagrams, and table scripts            | 2025-06-18  | 2025-06-22  | Project Setup          |
+| Auth System         | 7 days   | OAuth flow, email verification            | 2025-06-23  | 2025-06-29  | Database Design        |
+| Profile Module      | 7 days   | CRUD operations, media handling           | 2025-06-30  | 2025-07-06  | Authentication System  |
+| Admin Interface     | 6 days   | Dashboard and admin ops                   | 2025-07-07  | 2025-07-12  | Profile Module         |
+| Testing & Deployment| 5 days   | Module testing, deployment ops            | 2025-07-13  | 2025-07-17  | Admin Interface        |
+
+---
 ## Project Structure
-
 
 alumni_slambook/
 ├── manage.py                      # Django management script
