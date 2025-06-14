@@ -1,0 +1,79 @@
+graph TB
+    %% Client Layer
+    subgraph "Client Layer"
+        UI[Web Browser/Mobile]
+        JS[JavaScript Frontend]
+        HTML[HTML Templates]
+        CSS[CSS Styling]
+    end
+
+    %% Application Layer
+    subgraph "Application Layer"
+        subgraph "Flask Web Server"
+            ROUTE[Route Handlers]
+            API[REST API Endpoints]
+            CORS[CORS Middleware]
+        end
+        
+        subgraph "Business Logic"
+            WS[Weather Service]
+            DS[Database Service]
+            FS[Favorites Service]
+            HS[History Service]
+        end
+    end
+
+    %% Data Layer
+    subgraph "Data Layer"
+        subgraph "MySQL Database"
+            CITIES[(Cities Table)]
+            WEATHER[(Weather Data Table)]
+            FAVORITES[(Favorites Table)]
+        end
+    end
+
+    %% External Services
+    subgraph "External Services"
+        WAPI[WeatherAPI.com<br/>Current Weather Data]
+    end
+
+    %% Client interactions
+    UI --> JS
+    JS --> HTML
+    JS --> CSS
+    JS -->|HTTP Requests| ROUTE
+
+    %% Flask routing
+    ROUTE --> API
+    API --> CORS
+    CORS --> WS
+    CORS --> DS
+    CORS --> FS
+    CORS --> HS
+
+    %% Service interactions
+    WS -->|Fetch Weather| WAPI
+    WS -->|Store Data| DS
+    FS -->|Manage Favorites| DS
+    HS -->|Query History| DS
+
+    %% Database interactions
+    DS --> CITIES
+    DS --> WEATHER
+    DS --> FAVORITES
+
+    %% Data flow
+    WAPI -->|JSON Response| WS
+    CITIES -.->|Foreign Key| WEATHER
+    CITIES -.->|Foreign Key| FAVORITES
+
+    %% Styling
+    classDef clientLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef appLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef dataLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef externalLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class UI,JS,HTML,CSS clientLayer
+    class ROUTE,API,CORS,WS,DS,FS,HS appLayer
+    class CITIES,WEATHER,FAVORITES dataLayer
+    class WAPI externalLayer
