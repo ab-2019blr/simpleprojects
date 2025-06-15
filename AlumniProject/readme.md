@@ -113,4 +113,4 @@ alumni_slambook/
 - This structure follows Django best practices and supports scalability and maintainability.
 
 This foundation enables development of a modern, user-friendly Alumni Slam Book web application.
-```
+``` 
