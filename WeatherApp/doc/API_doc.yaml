@@ -1,0 +1,815 @@
+openapi: 3.0.3
+info:
+  title: Weather Application API
+  description: |
+    A comprehensive weather application API built with Flask that provides current weather data, 
+    forecasts, city management, and user favorites functionality. Integrates with WeatherAPI.com 
+    for real-time weather data and maintains a MySQL database for persistent storage.
+    
+    ## Features
+    - Current weather and forecasts for any city
+    - Weather history tracking
+    - User favorite cities management
+    - Responsive design support
+    - Rate limiting and caching
+    
+  version: 1.0.0
+  contact:
+    name: Weather App Support
+    email: support@weatherapp.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Development server
+  - url: https://api.weatherapp.com/v1
+    description: Production server
+
+tags:
+  - name: weather
+    description: Weather data operations
+  - name: cities
+    description: City management operations
+  - name: favorites
+    description: User favorite cities
+  - name: history
+    description: Weather history tracking
+  - name: health
+    description: API health and status
+
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Health check endpoint
+      description: Returns the API health status and database connectivity
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  database:
+                    type: string
+                    example: "connected"
+                  version:
+                    type: string
+                    example: "1.0.0"
+
+  /weather/current:
+    get:
+      tags:
+        - weather
+      summary: Get current weather for a city
+      description: Retrieves current weather conditions for a specified city
+      parameters:
+        - name: city
+          in: query
+          required: true
+          description: City name (e.g., "London" or "New York")
+          schema:
+            type: string
+            example: "London"
+        - name: units
+          in: query
+          required: false
+          description: Temperature units (metric, imperial)
+          schema:
+            type: string
+            enum: [metric, imperial]
+            default: metric
+      responses:
+        '200':
+          description: Current weather data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentWeather'
+        '400':
+          description: Bad request - missing or invalid city parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /weather/forecast:
+    get:
+      tags:
+        - weather
+      summary: Get weather forecast for a city
+      description: Retrieves weather forecast for a specified city (up to 7 days)
+      parameters:
+        - name: city
+          in: query
+          required: true
+          description: City name
+          schema:
+            type: string
+            example: "London"
+        - name: days
+          in: query
+          required: false
+          description: Number of forecast days (1-7)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+            default: 5
+        - name: units
+          in: query
+          required: false
+          description: Temperature units
+          schema:
+            type: string
+            enum: [metric, imperial]
+            default: metric
+      responses:
+        '200':
+          description: Weather forecast data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherForecast'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cities:
+    get:
+      tags:
+        - cities
+      summary: Search cities
+      description: Search for cities by name with autocomplete suggestions
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query (minimum 2 characters)
+          schema:
+            type: string
+            minLength: 2
+            example: "Lond"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: List of matching cities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/City'
+                  total:
+                    type: integer
+        '400':
+          description: Bad request - invalid search query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - cities
+      summary: Add a new city
+      description: Add a city to the database for tracking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - country
+              properties:
+                name:
+                  type: string
+                  example: "London"
+                country:
+                  type: string
+                  example: "United Kingdom"
+                region:
+                  type: string
+                  example: "England"
+                latitude:
+                  type: number
+                  format: float
+                  example: 51.5074
+                longitude:
+                  type: number
+                  format: float
+                  example: -0.1278
+      responses:
+        '201':
+          description: City created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/City'
+        '400':
+          description: Bad request - invalid city data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: City already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cities/{cityId}:
+    get:
+      tags:
+        - cities
+      summary: Get city by ID
+      description: Retrieve detailed information about a specific city
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          description: City ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: City details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/City'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - cities
+      summary: Delete a city
+      description: Remove a city from the database
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          description: City ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: City deleted successfully
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /favorites:
+    get:
+      tags:
+        - favorites
+      summary: Get user's favorite cities
+      description: Retrieve all cities marked as favorites by the user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: User ID
+          schema:
+            type: string
+            example: "user123"
+      responses:
+        '200':
+          description: List of favorite cities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  favorites:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FavoriteCity'
+                  total:
+                    type: integer
+
+    post:
+      tags:
+        - favorites
+      summary: Add city to favorites
+      description: Add a city to user's favorites list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - cityId
+              properties:
+                userId:
+                  type: string
+                  example: "user123"
+                cityId:
+                  type: integer
+                  example: 1
+      responses:
+        '201':
+          description: City added to favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteCity'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: City already in favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /favorites/{favoriteId}:
+    delete:
+      tags:
+        - favorites
+      summary: Remove city from favorites
+      description: Remove a city from user's favorites list
+      parameters:
+        - name: favoriteId
+          in: path
+          required: true
+          description: Favorite record ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: City removed from favorites
+        '404':
+          description: Favorite not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /history:
+    get:
+      tags:
+        - history
+      summary: Get weather history
+      description: Retrieve weather history for a city or user
+      parameters:
+        - name: cityId
+          in: query
+          required: false
+          description: Filter by city ID
+          schema:
+            type: integer
+            example: 1
+        - name: userId
+          in: query
+          required: false
+          description: Filter by user ID
+          schema:
+            type: string
+            example: "user123"
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for filtering (ISO 8601)
+          schema:
+            type: string
+            format: date
+            example: "2024-01-01"
+        - name: endDate
+          in: query
+          required: false
+          description: End date for filtering (ISO 8601)
+          schema:
+            type: string
+            format: date
+            example: "2024-01-31"
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of records
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          description: Number of records to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Weather history records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WeatherHistory'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+    post:
+      tags:
+        - history
+      summary: Add weather history record
+      description: Store a weather data point in history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cityId
+                - weatherData
+              properties:
+                cityId:
+                  type: integer
+                  example: 1
+                userId:
+                  type: string
+                  example: "user123"
+                weatherData:
+                  $ref: '#/components/schemas/CurrentWeather'
+      responses:
+        '201':
+          description: Weather history record created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherHistory'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    CurrentWeather:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        current:
+          type: object
+          properties:
+            temperature:
+              type: number
+              format: float
+              example: 22.5
+            feelsLike:
+              type: number
+              format: float
+              example: 24.1
+            humidity:
+              type: integer
+              example: 65
+            pressure:
+              type: number
+              format: float
+              example: 1013.2
+            windSpeed:
+              type: number
+              format: float
+              example: 15.5
+            windDirection:
+              type: integer
+              example: 230
+            visibility:
+              type: number
+              format: float
+              example: 10.0
+            uvIndex:
+              type: number
+              format: float
+              example: 5.2
+            condition:
+              type: string
+              example: "Partly cloudy"
+            icon:
+              type: string
+              example: "partly-cloudy-day"
+            isDay:
+              type: boolean
+              example: true
+            lastUpdated:
+              type: string
+              format: date-time
+              example: "2024-06-15T14:30:00Z"
+
+    WeatherForecast:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        current:
+          $ref: '#/components/schemas/CurrentWeather/properties/current'
+        forecast:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+                example: "2024-06-16"
+              day:
+                type: object
+                properties:
+                  maxTemp:
+                    type: number
+                    format: float
+                    example: 25.3
+                  minTemp:
+                    type: number
+                    format: float
+                    example: 15.8
+                  avgTemp:
+                    type: number
+                    format: float
+                    example: 20.5
+                  maxWind:
+                    type: number
+                    format: float
+                    example: 18.2
+                  totalPrecip:
+                    type: number
+                    format: float
+                    example: 2.5
+                  humidity:
+                    type: integer
+                    example: 70
+                  condition:
+                    type: string
+                    example: "Light rain"
+                  icon:
+                    type: string
+                    example: "rain"
+                  uvIndex:
+                    type: number
+                    format: float
+                    example: 4.5
+              astro:
+                type: object
+                properties:
+                  sunrise:
+                    type: string
+                    example: "05:45 AM"
+                  sunset:
+                    type: string
+                    example: "09:15 PM"
+                  moonPhase:
+                    type: string
+                    example: "Waxing Crescent"
+              hourly:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: string
+                      format: date-time
+                      example: "2024-06-16T09:00:00Z"
+                    temperature:
+                      type: number
+                      format: float
+                      example: 18.5
+                    condition:
+                      type: string
+                      example: "Cloudy"
+                    icon:
+                      type: string
+                      example: "cloudy"
+                    windSpeed:
+                      type: number
+                      format: float
+                      example: 12.0
+                    humidity:
+                      type: integer
+                      example: 75
+                    chanceOfRain:
+                      type: integer
+                      example: 30
+
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "London"
+        region:
+          type: string
+          example: "City of London, Greater London"
+        country:
+          type: string
+          example: "United Kingdom"
+        latitude:
+          type: number
+          format: float
+          example: 51.5074
+        longitude:
+          type: number
+          format: float
+          example: -0.1278
+        timezone:
+          type: string
+          example: "Europe/London"
+        localTime:
+          type: string
+          format: date-time
+          example: "2024-06-15T15:30:00"
+
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "London"
+        country:
+          type: string
+          example: "United Kingdom"
+        region:
+          type: string
+          example: "England"
+        latitude:
+          type: number
+          format: float
+          example: 51.5074
+        longitude:
+          type: number
+          format: float
+          example: -0.1278
+        timezone:
+          type: string
+          example: "Europe/London"
+        population:
+          type: integer
+          example: 8982000
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-06-15T10:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-06-15T10:00:00Z"
+
+    FavoriteCity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        userId:
+          type: string
+          example: "user123"
+        cityId:
+          type: integer
+          example: 1
+        city:
+          $ref: '#/components/schemas/City'
+        addedAt:
+          type: string
+          format: date-time
+          example: "2024-06-15T12:00:00Z"
+        nickname:
+          type: string
+          example: "Home"
+          description: Optional user-defined nickname for the city
+
+    WeatherHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        cityId:
+          type: integer
+          example: 1
+        userId:
+          type: string
+          example: "user123"
+        city:
+          $ref: '#/components/schemas/City'
+        weatherData:
+          $ref: '#/components/schemas/CurrentWeather'
+        recordedAt:
+          type: string
+          format: date-time
+          example: "2024-06-15T14:30:00Z"
+        source:
+          type: string
+          example: "WeatherAPI"
+          description: Source of the weather data
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "City not found"
+        message:
+          type: string
+          example: "The specified city could not be found in our database"
+        code:
+          type: string
+          example: "CITY_NOT_FOUND"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-15T14:30:00Z"
+        path:
+          type: string
+          example: "/api/v1/weather/current"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+security:
+  - ApiKeyAuth: []
+
+# Rate limiting information
+x-ratelimit-limit: 1000
+x-ratelimit-window: 3600
