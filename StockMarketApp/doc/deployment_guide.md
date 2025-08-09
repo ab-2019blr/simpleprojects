@@ -1,6 +1,6 @@
-# Stock Market Analytics Platform - Deployment Guide
+# Indian Stock Market App - Deployment Guide
 
-This comprehensive guide covers all aspects of deploying the Stock Market Analytics Platform in various environments, from local development to production-ready cloud deployments.
+This comprehensive guide covers all aspects of deploying the Stock Market App in various environments, from local development to production-ready cloud deployments.
 
 ## 📋 Table of Contents
 
@@ -38,7 +38,7 @@ This comprehensive guide covers all aspects of deploying the Stock Market Analyt
 | **Docker** | 20.0+ | `curl -fsSL https://get.docker.com | sh` | Containerization |
 | **Nginx** | Latest | `sudo apt install nginx` | Reverse proxy |
 
-### Indian Stock Market API Requirements
+### Indian Stock Market App's API Requirements
 
 The application requires access to **free Indian stock market APIs**:
 
@@ -812,4 +812,4 @@ def display_market_status():
     st.write(f"Market Hours: 09:15 - 15:30 IST (Mon-Fri)")
 ```
 
-This comprehensive deployment guide specifically tailored for an Indian Stock Market Analytics Platform includes all the necessary configurations, security measures, and deployment options needed to build and deploy a robust application. The guide covers everything from local development setup to production cloud deployments, with specific emphasis on Indian market requirements, data sources, and regulatory considerations.
+This comprehensive deployment guide specifically tailored for an Indian Stock Market App includes all the necessary configurations, security measures, and deployment options needed to build and deploy a robust application. The guide covers everything from local development setup to production cloud deployments, with specific emphasis on Indian market requirements, data sources, and regulatory considerations.
