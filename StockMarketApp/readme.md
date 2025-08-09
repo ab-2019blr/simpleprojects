@@ -1,6 +1,6 @@
-# Indian Stock Market Analytics Platform
+# Indian Stock Market App
 
-A comprehensive web-based stock market analytics application built with Python and Streamlit, designed to provide real-time Indian stock market data, advanced analytics, and portfolio management tools.
+A comprehensive web-based stock market application built with Python, Streamlit and MySQL, designed to provide real-time Indian stock market data, advanced analytics, and portfolio management tools.
 
 ## 🚀 Features Overview
 
