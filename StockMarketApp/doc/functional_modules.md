@@ -1,6 +1,6 @@
-# Stock Market Analytics Platform - Functional Modules
+# Indian Stock Market App - Functional Modules
 
-This document outlines the high-level functional modules for the Indian Stock Market Analytics Platform, designed to provide comprehensive market analysis, portfolio tracking, and investment insights.
+This document outlines the high-level functional modules for the Indian Stock Market App, designed to provide comprehensive market analysis, portfolio tracking, and investment insights.
 
 ## 📊 Module Architecture Overview
 
@@ -330,4 +330,4 @@ Each module is designed to be:
 - **Social Trading**: Community features and copy trading
 - **Mobile API**: Dedicated mobile application support
 
-This modular architecture ensures the Indian Stock Market Analytics Platform can evolve and scale according to user needs while maintaining high performance and reliability for Indian market operations.
+This modular architecture ensures the Indian Stock Market App can evolve and scale according to user needs while maintaining high performance and reliability for Indian market operations.
