@@ -1,6 +1,6 @@
-# Stock Market Analytics Platform - API Documentation
+# Indian Stock Market App - API Documentation
 
-This document provides comprehensive API documentation for the Stock Market Analytics Platform's internal APIs and external integrations.
+This document provides comprehensive API documentation for the Indian Stock Market App's internal APIs and external integrations.
 
 ## 📋 Table of Contents
 
@@ -16,7 +16,7 @@ This document provides comprehensive API documentation for the Stock Market Anal
 
 ## 🔍 Overview
 
-The Stock Market Analytics Platform provides both internal APIs for component communication and external API integrations for data sourcing.
+The Stock Market App provides both internal APIs for component communication and external API integrations for data sourcing.
 
 ### API Architecture
 
