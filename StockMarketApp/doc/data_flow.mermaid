@@ -1,0 +1,78 @@
+flowchart LR
+    %% External APIs
+    subgraph EXT[External Data Sources]
+        YF[Yahoo Finance API]
+        AV[Alpha Vantage API]
+        NEWSAPI[News API]
+    end
+
+    %% API Client
+    subgraph API[API Integration Layer]
+        API_CLIENT[API Client<br/>Fetch & Validate Data]
+        RATE_LIMIT[Rate Limiting & Retry]
+        FAILOVER[Failover Mechanism]
+    end
+
+    %% Data Processing
+    subgraph PROC[Data Processing Engine]
+        CLEAN[Data Cleaning & Validation]
+        TECH_IND[Technical Indicator Calculation<br/>SMA, EMA, RSI, MACD, Bollinger]
+        AGG[Aggregation & Analytics<br/>Gainers/Losers, Sector Stats]
+    end
+
+    %% Database & Cache
+    subgraph STORAGE[Data Storage & Caching]
+        DB[(MySQL Database)]
+        CACHE[Cache Layer<br/>Streamlit Cache / Redis]
+    end
+
+    %% Background Jobs
+    subgraph JOBS[Background Jobs & Scheduling]
+        SCHED[Scheduler<br/>Schedule Updates]
+        UPDATE_PRICES[Update Stock Prices]
+        UPDATE_INDICATORS[Update Technical Indicators]
+    end
+
+    %% Business Logic
+    subgraph BL[Business Logic Layer]
+        QUERY[Query Manager<br/>Optimized DB Queries]
+        FILTERS[Filters & Search]
+        EXPORT[Export to CSV/Excel]
+    end
+
+    %% User Interface
+    subgraph UI[User Interface Layer]
+        DASH[Dashboard - Market Overview]
+        WATCHLIST[Watchlist - Tracking & Alerts]
+        CHARTS[Candlestick & Technical Charts]
+        ANALYTICS[Analytics & Reports]
+        NEWS[Market & Stock News]
+    end
+
+    %% Data Flow
+    YF --> API_CLIENT
+    AV --> API_CLIENT
+    NEWSAPI --> API_CLIENT
+    API_CLIENT --> RATE_LIMIT --> FAILOVER --> CLEAN
+    CLEAN --> TECH_IND
+    TECH_IND --> AGG
+    AGG --> DB
+    TECH_IND --> DB
+    AGG --> CACHE
+    DB --> QUERY
+    CACHE --> QUERY
+    QUERY --> FILTERS
+    FILTERS --> EXPORT
+    QUERY --> DASH
+    QUERY --> WATCHLIST
+    QUERY --> CHARTS
+    QUERY --> ANALYTICS
+    QUERY --> NEWS
+
+    %% Background Jobs Flow
+    SCHED --> UPDATE_PRICES --> API_CLIENT
+    SCHED --> UPDATE_INDICATORS --> TECH_IND
+    UPDATE_PRICES --> DB
+    UPDATE_INDICATORS --> DB
+    UPDATE_PRICES --> CACHE
+    UPDATE_INDICATORS --> CACHE
