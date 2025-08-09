@@ -1,0 +1,68 @@
+flowchart TB
+    subgraph UI[User Interface Layer]
+        APP[app.py - Streamlit Entry Point]
+        DASH[Dashboard Page]
+        ANALYTICS[Analytics Page]
+        WATCHLIST[Watchlist Page]
+        CHARTS[Charts Page]
+        NEWS[News Page]
+    end
+
+    subgraph BL[Business Logic & Utilities]
+        CALC[Technical & Financial Calculations]
+        CHART_UTILS[Chart Rendering Utilities]
+        HELPERS[Helpers & Constants]
+    end
+
+    subgraph DATA[Data Layer]
+        DBM[Database Manager<br/>SQLAlchemy + MySQL]
+        API_CLIENT[API Client<br/>Yahoo Finance / Alpha Vantage]
+        DATA_PROC[Data Processor<br/>Indicators, Analytics]
+    end
+
+    subgraph INFRA[Infrastructure & Deployment]
+        CONFIG[Config & Env Settings]
+        CACHE[Cache Layer<br/>Streamlit / Redis]
+        SCHED[Background Jobs<br/>Data Updater]
+        DOCKER[Docker & Compose]
+    end
+
+    subgraph MON[Monitoring & Logging]
+        LOGS[Centralized Logging]
+        HEALTH[Health Checks]
+    end
+
+    %% Connections
+    APP --> DASH
+    APP --> ANALYTICS
+    APP --> WATCHLIST
+    APP --> CHARTS
+    APP --> NEWS
+
+    DASH --> BL
+    ANALYTICS --> BL
+    WATCHLIST --> BL
+    CHARTS --> BL
+    NEWS --> BL
+
+    BL --> CALC
+    BL --> CHART_UTILS
+    BL --> HELPERS
+    BL --> DATA_PROC
+
+    DATA_PROC --> DBM
+    DATA_PROC --> API_CLIENT
+    API_CLIENT --> DBM
+
+    DBM --> CACHE
+    DATA_PROC --> CACHE
+
+    SCHED --> API_CLIENT
+    SCHED --> DATA_PROC
+    CONFIG --> DBM
+    CONFIG --> API_CLIENT
+    CONFIG --> CACHE
+
+    INFRA --> MON
+    MON --> LOGS
+    MON --> HEALTH
