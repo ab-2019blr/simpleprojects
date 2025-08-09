@@ -956,13 +956,13 @@ Types: feat, fix, docs, style, refactor, test, chore
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details.
 
 ## Support
 
 For support and questions:
 - Create an issue on GitHub
-- Check the [documentation](docs/)
+- Check the [documentation](./functional_modules.md)
 - Contact the development team
 
 ---

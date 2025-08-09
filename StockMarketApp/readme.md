@@ -82,3 +82,21 @@ A comprehensive web-based stock market analytics application built with Python a
 - Python 3.9 or higher
 - MySQL 8.0 or higher
 - Git
+
+
+## 📞 Support & Documentation
+
+| Resource | Link | Description |
+|----------|------|-------------|
+| **Architecture Guide** | [ARCHITECTURE.md](./doc/architecture.md) | Detailed technical documentation |
+| **API Documentation** | [API.md](./doc/api_documentation.md) | API endpoints and usage |
+| **Deployment Guide** | [DEPLOYMENT.md](./doc/deployment_guide.md) | Production deployment instructions |
+| **Contributing** | [CONTRIBUTING.md](./doc/how_to_contribute.md) | Development guidelines |
+| **Issue Tracker** | GitHub Issues | Bug reports and feature requests |
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./doc/LICENSE.md) file for details.
+
+
+## For further details, contact : [Ayan_class_XII](mailto:ab.2019blr@gmail.com)
