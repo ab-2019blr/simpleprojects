@@ -5,7 +5,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 ## Phase 1: Project Foundation & Setup
 
 ### 1.1 Project Structure & Environment
-- **Create repository structure** as outlined in architecture document[1]
+- **Create repository structure** as outlined in architecture document[1](./architecture.md#project-structure)
 - **Set up virtual environment** and configure Python 3.9+ dependencies
 - **Initialize Git repository** with proper .gitignore for Python/Streamlit projects
 - **Create requirements.txt** with all necessary packages (Streamlit, SQLAlchemy, yfinance, etc.)
@@ -14,7 +14,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 
 ### 1.2 Database Design & Setup
 - **Install and configure MySQL 8.0** for local development
-- **Create database schema** with all tables as defined in architecture[1]
+- **Create database schema** with all tables as defined in architecture[1](./architecture.md#database-schema)
 - **Implement database models** using SQLAlchemy ORM
 - **Set up database connection pooling** and session management
 - **Create initial migration scripts** for database versioning
@@ -64,7 +64,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 - **Implement custom CSS styling** for enhanced UI
 
 ### 3.2 Dashboard Development
-- **Build main dashboard page** with market overview widgets[2]
+- **Build main dashboard page** with market overview widgets[2](./architecture.md#visualization)
 - **Create real-time index value displays** for major Indian indices
 - **Implement top gainers/losers tables** with sorting capabilities
 - **Add market heat map visualization** using Plotly
@@ -72,7 +72,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 - **Implement auto-refresh functionality** for live data updates
 
 ### 3.3 Analytics Module
-- **Develop comprehensive analytics page** for performance analysis[2]
+- **Develop comprehensive analytics page** for performance analysis[2](./architecture.md#visualization)
 - **Create historical trend analysis tools** with custom date ranges
 - **Implement sector-wise comparison charts**
 - **Build volume pattern analysis features**
@@ -80,7 +80,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 - **Create performance benchmark comparisons**
 
 ### 3.4 Watchlist Management
-- **Build watchlist creation and management interface**[2]
+- **Build watchlist creation and management interface**[2](./architecture.md#watchlists)
 - **Implement real-time price monitoring** for selected stocks
 - **Create performance tracking dashboards** for watchlist items
 - **Add alert configuration system** for price notifications
@@ -88,7 +88,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 - **Create watchlist sharing and export features**
 
 ### 3.5 Advanced Charting
-- **Develop interactive candlestick charts** using Plotly[2]
+- **Develop interactive candlestick charts** using Plotly[2](./architecture.md#chartspy)
 - **Implement technical indicator overlays** on price charts
 - **Create multi-timeframe analysis views**
 - **Add volume analysis charts** with correlation to price movements
@@ -96,7 +96,7 @@ Here's a structured development roadmap for your Indian Stock Market Analytics P
 - **Create comparison charts** for multiple stocks
 
 ### 3.6 News Integration
-- **Build news aggregation system** for market intelligence[2]
+- **Build news aggregation system** for market intelligence[2](./architecture.md#stocks)
 - **Implement stock-specific news filtering**
 - **Create sentiment analysis displays** for news articles
 - **Add news search and filtering capabilities**
