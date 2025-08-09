@@ -1,8 +1,8 @@
-# Stock Market Application - Architecture Design
+# Indian Stock Market Application - Architecture Design
 
 ## Overview
 
-A comprehensive stock market analytics application built with Streamlit and Python, designed to pull Indian stock data from free APIs, store it in MySQL database, and provide advanced analytics including watchlists, charts, and market insights.
+A comprehensive stock market application built with Streamlit and Python, designed to pull Indian stock data from free APIs, store it in MySQL database, and provide advanced analytics including watchlists, charts, and market insights.
 
 ## Table of Contents
 
