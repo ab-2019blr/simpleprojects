@@ -1,6 +1,6 @@
-# Contributing to Indian Stock Market Analytics Platform
+# Contributing to Indian Stock Market App
 
-Thank you for considering contributing to our Stock Market Analytics Platform! This document provides guidelines and information for contributors.
+Thank you for considering contributing to our Indian Stock Market App! This document provides guidelines and information for contributors.
 
 ## 🤝 Code of Conduct
 
@@ -612,7 +612,7 @@ Contributors will be recognized in:
 - Project documentation
 - Annual contributor report
 
-Thank you for contributing to the Indian Stock Market Analytics Platform! 🚀
+Thank you for contributing to the Indian Stock Market App! 🚀
 
 ---
 
