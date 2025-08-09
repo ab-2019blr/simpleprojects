@@ -92,7 +92,7 @@ A comprehensive web-based stock market analytics application built with Python a
 | **API Documentation** | [API.md](./doc/api_documentation.md) | API endpoints and usage |
 | **Deployment Guide** | [DEPLOYMENT.md](./doc/deployment_guide.md) | Production deployment instructions |
 | **Contributing** | [CONTRIBUTING.md](./doc/how_to_contribute.md) | Development guidelines |
-| **Issue Tracker** | GitHub Issues | Bug reports and feature requests |
+| **Issue Tracker** | [GitHub Issues](https://github.com/issues/assigned) | Bug reports and feature requests |
 
 ## 📄 License
 
