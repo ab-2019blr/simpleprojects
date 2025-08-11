@@ -1,12 +1,12 @@
 # Business Requirements Document (BRD)
-## Indian Stock Market Analytics Application
+## Indian Stock Market Application
 
 ---
 
 ### Document Information
 | **Attribute** | **Details** |
 |---------------|-------------|
-| **Document Title** | Indian Stock Market Analytics Application - Business Requirements Document |
+| **Document Title** | Indian Stock Market Application - Business Requirements Document |
 | **Version** | 1.0 |
 | **Date** | December 2024 |
 | **Project Code** | ISMA-2024 |
@@ -19,7 +19,7 @@
 ## 1. Executive Summary
 
 ### 1.1 Project Overview
-The Indian Stock Market Analytics Application is a comprehensive web-based platform designed to provide retail and institutional investors with real-time market data, advanced analytics, portfolio management, and intelligent insights for Indian equity markets. Built using Streamlit and MySQL, the application aims to democratize access to sophisticated market analysis tools traditionally available only to high-end institutional clients.
+The Indian Stock Market Application is a comprehensive web-based platform designed to provide retail and institutional investors with real-time market data, advanced analytics, portfolio management, and intelligent insights for Indian equity markets. Built using Streamlit and MySQL, the application aims to democratize access to sophisticated market analysis tools traditionally available only to high-end institutional clients.
 
 ### 1.2 Business Objectives
 - **Primary Objective**: Develop a user-friendly, comprehensive stock market analysis platform for Indian markets
@@ -453,10 +453,10 @@ The Indian retail investment market has witnessed explosive growth with:
 
 | **Document** | **Version** | **Location** |
 |-------------|-------------|--------------|
-| Technical Architecture Document | 1.0 | [Link/Path] |
-| Project Plan | 1.0 | [Link/Path] |
-| User Story Mapping | 1.0 | [Link/Path] |
-| API Documentation | 1.0 | [Link/Path] |
+| Technical Architecture Document | 1.0 | [Architecture Doc](./architecture.md) |
+| Project Plan | 1.0 | [Project Plan](./project_plan.md) |
+| User Story Mapping | 1.0 | [User-stories](./sprint_plan_user_stories.md) |
+| API Documentation | 1.0 | [API Doc](./api_documentation.md) |
 
 ---
 
