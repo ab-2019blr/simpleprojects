@@ -1,12 +1,12 @@
 # System Requirements Specification (SRS)
-## Indian Stock Market Analytics Application
+## Indian Stock Market Application
 
 ---
 
 ### Document Information
 | **Attribute** | **Details** |
 |---------------|-------------|
-| **Document Title** | System Requirements Specification - Indian Stock Market Analytics Application |
+| **Document Title** | System Requirements Specification - Indian Stock Market Application |
 | **Version** | 1.0 |
 | **Date** | December 2024 |
 | **Project Code** | ISMA-2024 |
@@ -34,7 +34,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This System Requirements Specification (SRS) document defines the technical requirements, system architecture, and implementation specifications for the Indian Stock Market Analytics Application. It serves as a comprehensive guide for development, testing, and deployment teams.
+This System Requirements Specification (SRS) document defines the technical requirements, system architecture, and implementation specifications for the Indian Stock Market Application. It serves as a comprehensive guide for development, testing, and deployment teams.
 
 ### 1.2 Scope
 The application provides comprehensive stock market analysis capabilities for Indian equity markets, including real-time data processing, technical analysis, portfolio management, and intelligent alerting systems.
@@ -55,7 +55,7 @@ The application provides comprehensive stock market analysis capabilities for In
 ## 2. System Overview
 
 ### 2.1 System Purpose
-The Indian Stock Market Analytics Application is designed to:
+The Indian Stock Market Application is designed to:
 - Provide real-time market data and analytics for Indian equity markets
 - Enable sophisticated technical and fundamental analysis
 - Support portfolio tracking and performance monitoring
