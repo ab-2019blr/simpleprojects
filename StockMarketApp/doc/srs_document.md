@@ -1547,10 +1547,10 @@ Scalability Milestones:
 
 | **Version** | **Date** | **Author** | **Changes** |
 |-------------|----------|------------|-------------|
-| 0.1 | Dec 2024 | Technical Team | Initial draft creation |
-| 0.2 | Dec 2024 | Business Analyst | Requirements refinement |
-| 0.3 | Dec 2024 | Architect | Technical specifications added |
-| 1.0 | Dec 2024 | Project Manager | Final review and approval |
+| 0.1 | April 2025 | Technical Team | Initial draft creation |
+| 0.2 | May 2025 | Business Analyst | Requirements refinement |
+| 0.3 | June 2025 | Architect | Technical specifications added |
+| 1.0 | July 2025 | Project Manager | Final review and approval |
 
 ### 20.2 Approval Matrix
 
@@ -1576,8 +1576,8 @@ Scalability Milestones:
 **Document Classification**: Internal Use  
 **Security Level**: Confidential  
 **Document Owner**: Technical Architecture Team  
-**Next Review Date**: March 2025  
-**Document Location**: Project Repository - /docs/technical/SRS.md
+**Next Review Date**: Dec. 2025  
+**Document Location**: Project Repository - [SRS Doc.](./srs_document.md)
 
 ---
 
