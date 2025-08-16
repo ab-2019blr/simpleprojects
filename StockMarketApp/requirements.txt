@@ -1,0 +1,1 @@
+# File for specifying the Python package dependencies of the StockMarketApp project

@@ -1,0 +1,1 @@
+# News and research page for StockMarketApp app 

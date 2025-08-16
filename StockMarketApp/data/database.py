@@ -1,0 +1,1 @@
+# File contains the database connection and models for the StockMarketApp project

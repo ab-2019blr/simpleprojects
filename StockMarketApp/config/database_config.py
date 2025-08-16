@@ -1,0 +1,1 @@
+# File to configure the  database settings for the StockMarketApp project

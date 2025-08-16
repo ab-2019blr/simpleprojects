@@ -1,0 +1,1 @@
+# File contains data migration scripts for StockMarketApp

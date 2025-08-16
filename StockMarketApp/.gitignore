@@ -1,0 +1,6 @@
+# File that contains the list of files and directories to be ignored by Git in the StockMarketApp project
+# This file is used to prevent unnecessary files from being tracked by Git
+# and to keep the repository clean.
+*.log
+temp/
+*.tmp

@@ -1,0 +1,1 @@
+# Main dashboard page for stock market analysis and monitoring
