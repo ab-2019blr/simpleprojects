@@ -2,3 +2,4 @@ myenv/
 temp/
 *.log
 *.tmp
+*.csv
