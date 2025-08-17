@@ -1,5 +1,7 @@
 # Updated Stock Market Application - Project Structure with FastAPI
 
+This updated project stucture is a refence for future enhancement of this project with complete backend functionalities being exposed as API calls for frontend layer to consume - somewhat like microservices architecture. 
+
 ## 🔄 Architecture Overview
 
 The updated architecture separates the application into distinct layers:
