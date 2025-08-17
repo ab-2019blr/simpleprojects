@@ -4,3 +4,7 @@
 *.log
 temp/
 *.tmp
+myenv/
+*.pyc
+__pycache__/
+.vscode/ 
