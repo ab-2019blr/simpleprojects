@@ -4,3 +4,4 @@ temp/
 *.tmp
 *.csv
 .DS_Store
+.env 

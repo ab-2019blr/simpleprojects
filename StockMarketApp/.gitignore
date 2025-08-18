@@ -6,6 +6,7 @@
 temp/
 *.tmp
 myenv/
+.env 
 *.csv
 *.pyc
 __pycache__/

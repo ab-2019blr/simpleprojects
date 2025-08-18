@@ -5,3 +5,6 @@ requests
 niftystocks 
 nselib
 yfinance 
+sqlalchemy 
+mysql-connector-python 
+python-dotenv
