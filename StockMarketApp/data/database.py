@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import sys
 import os
+import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from config.database_config import DB_CONFIG  
 from config.database_config import DB_CONNECTION_STRING
@@ -44,12 +45,11 @@ try:
     def read_data():
         try:
             users = session.query(User).all()  # Query all records from the User table
-            for user in users:
-                print(f"ID: {user.id}, Name: {user.name}, Age: {user.age}")
+            data = [{'id': user.id, 'name': user.name, 'age': user.age} for user in users]
+            return pd.DataFrame(data)
         except Exception as e:
             print("Error while reading data:", e)
-        finally:
-            return users
+            return pd.DataFrame()
     
     # Function call to read data
     read_data()
