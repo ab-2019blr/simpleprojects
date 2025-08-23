@@ -1,6 +1,8 @@
 # Main Streamlit entry point for the StockMarketApp project
 
 import streamlit as st
+# Set page configuration
+st.set_page_config(page_title="Home", layout="centered", page_icon="🏠")
 
 # Set the page title
 st.title("Hello, Streamlit!")

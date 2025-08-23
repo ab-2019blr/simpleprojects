@@ -41,7 +41,7 @@ try:
     Session = sessionmaker(bind=engine)
     session = Session()  # Create a new session
 
-    # Read data from the database table
+    # Read all data from the database table
     def read_data():
         try:
             users = session.query(User).all()  # Query all records from the User table
@@ -51,8 +51,29 @@ try:
             print("Error while reading data:", e)
             return pd.DataFrame()
     
+    # Read specific data from the database table
+    def read_specific_data(name: str) -> pd.DataFrame:
+        try:
+            user = session.query(User).filter(User.name == name).first()
+            if user:
+                data = [ojb.__dict__ for ojb in [user]]
+                for d in data:
+                    d.pop('_sa_instance_state', None)
+                return pd.DataFrame(data)
+                # return pd.DataFrame(user.__dict__, index=[0])
+            else:
+                message = f"No user found with name: {name}"
+                return pd.DataFrame({'message': [message]})
+        except Exception as e:
+            print("Error while reading specific data:", e)
+            return None
+        
     # Function call to read data
-    read_data()
+    # read_data()
+    
+    # Function call to read specific data
+    # df = read_specific_data("Alice")
+    # print(df.to_string(index=False))
     
 except Exception as e:
     print("Error while connecting to MySQL:", e)    
