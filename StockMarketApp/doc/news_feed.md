@@ -1,6 +1,6 @@
 # News Feed Aggregation from external API
 
-##### Here’s a comprehensive comparison of different news feed providers, focusing on Indian NSE & Stock Market news coverage, and their Python integration:
+### Here’s a comprehensive comparison of different news feed providers, focusing on Indian NSE & Stock Market news coverage, and their Python integration:
 
 | **Provider** | **NSE News Coverage** | **Free Tier Usage** | **Python Integration** | **Notes** |
 | :--- | :--- | :--- | :--- | :--- |
@@ -21,8 +21,6 @@
 
 - News API works for broad business headlines but lacks NSE-specific depth; Alpha Vantage should be used only for pure price/history needs, not news.
 
-<br>
-<br>
 
 ### Optimal Approach:
 
