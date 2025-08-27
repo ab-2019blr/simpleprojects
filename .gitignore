@@ -3,5 +3,6 @@ temp/
 *.log
 *.tmp
 *.csv
+*.json
 .DS_Store
 .env 

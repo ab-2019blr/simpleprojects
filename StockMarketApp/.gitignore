@@ -8,6 +8,7 @@ temp/
 myenv/
 .env 
 *.csv
+*.json
 *.pyc
 __pycache__/
 .vscode/ 
