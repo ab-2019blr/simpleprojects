@@ -7,7 +7,8 @@ import base64
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from data.api_client import fetch_market_news # Importing read_data function from data package
+from data.api_client import fetch_market_news, fetch_global_market_news # Importing read_data function from data package
+# Replace missing or invalid image URLs with the default image 
 local_image_path = os.path.join(os.path.dirname(__file__),"..","assets","images","stock_market_image.jpg") # Local path to # Encode image as base64 string
 with open(local_image_path, "rb") as image_file: 
     encoded_string = base64.b64encode(image_file.read()).decode()   
@@ -41,7 +42,6 @@ selected_df['Date'] = pd.to_datetime(selected_df['Date']).dt.strftime('%d-%m-%Y'
 
 st.divider()
 
-# Replace missing or invalid image URLs with the default image 
 # HTML+CSS to create a ticker with scrolling effect
 ticker_html = '''
 <style>
@@ -128,3 +128,42 @@ ticker_html += '''
 # st.markdown(ticker_html, unsafe_allow_html=True)
 components.html(ticker_html, height=400, scrolling=False)
 st.divider()
+
+st.subheader("Global Market News from Alpha Vantage API")
+df2 = fetch_global_market_news() # Fetch global market news articles
+# st.dataframe(df2, hide_index=True) # Show only selected columns and format the date column
+# Pagination Settings
+items_per_page = 10
+num_pages = (len(df2) - 1) // items_per_page + 1
+# Initialize session state page number
+if 'page_number' not in st.session_state:
+    st.session_state.page_number = 0
+# Function to display news tile
+def display_tile(row):
+    st.markdown(f"##### {row['Title']}")
+    st.markdown(f"**Summary:** {row['Summary']}")
+    st.markdown(f"**Source:** {row['Source']}")
+    st.markdown(f"**Published:** {row['Date']}")
+    st.markdown(f"**Read more...** {row['URL']}")
+    st.markdown("---")
+# Calculate start and end indices for current page
+start_idx = st.session_state.page_number * items_per_page
+end_idx = min(start_idx + items_per_page, len(df2))
+# Display current page tiles vertically
+for idx in range(start_idx, end_idx):
+    display_tile(df2.iloc[idx])
+# Navigation buttons
+col1, col2, col3 = st.columns([1, 2, 1])
+with col1:
+    if st.button("Previous") and st.session_state.page_number > 0:
+        st.session_state.page_number -= 1
+
+with col2:
+    st.markdown(f"**Page {st.session_state.page_number + 1} of {num_pages}**")
+
+with col3:
+    if st.button("Next") and st.session_state.page_number < num_pages - 1:
+        st.session_state.page_number += 1
+
+st.success("Global market news displayed successfully!")
+st.divider() 
