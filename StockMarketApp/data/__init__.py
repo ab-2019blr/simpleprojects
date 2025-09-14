@@ -4,4 +4,6 @@
 
 from .database import read_data, read_specific_data # Import read_data function from database module
 
-__all__ = ['read_data', 'read_specific_data']  # Define the public interface of the package
+from .api_client import fetch_stock_ticker, fetch_stock_ticker_finnhub, fetch_market_news # Import API client functions from api_client module
+
+__all__ = ['read_data', 'read_specific_data', 'fetch_stock_ticker', 'fetch_stock_ticker_finnhub', 'fetch_market_news']  # Define the public interface of the package

@@ -5,16 +5,16 @@ import streamlit as st
 st.set_page_config(page_title="Home", layout="centered", page_icon="🏠")
 
 # Set the page title
-st.title("Hello, Streamlit!")
+st.title("StockMarketApp Home Page")
 
 # Add a header
-st.header("Welcome to My First Streamlit App")
+st.header("Welcome to My StockMarket App")
 
 # Add a subheader
-st.subheader("This is a simple example page.")
+st.subheader("This is a simple example page of StockMarketApp.")
 
 # Display text
-st.write("You can build interactive and beautiful web apps using just Python!")
+st.write("You can build interactive and beautiful web apps using just Streamlit and Python!")
 
 # Text input widget
 name = st.text_input("Enter your name")

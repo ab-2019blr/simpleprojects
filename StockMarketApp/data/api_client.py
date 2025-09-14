@@ -10,7 +10,7 @@ import requests
 import sys 
 import os
 import json
-# import pandas as pd
+import pandas as pd
 # from nsetools import Nse
 # nse = Nse() 
 
@@ -50,8 +50,8 @@ def fetch_stock_ticker_finnhub(symbol: str) -> dict:
 # Fetching NIFTY top gainers and losers using NSETOOLS API
 
 # Market news from MarketAux API
-def fetch_market_news(number: int) -> dict:
-    url = f"https://api.marketaux.com/v1/news/all?countries=in&filter_entities=true&limit={number}&published_after=2025-08-27T11:06&api_token={marketaux_api_key}"
+def fetch_market_news(number: int) -> pd.DataFrame:
+    url = f"https://api.marketaux.com/v1/news/all?countries=in&filter_entities=true&limit={number}&published_after=2025-09-10T11:06&api_token={marketaux_api_key}"
     response = requests.get(url)
     data = response.json()
     if isinstance(data, list) and len(data) > 0:
@@ -61,7 +61,25 @@ def fetch_market_news(number: int) -> dict:
     else:
         result_data = []
 
-    return (result_data)
+    # return (result_data) # Return the list of news articles as a dictionary
+    # Convert the list of news articles to a pandas DataFrame
+    df = pd.DataFrame.from_dict(result_data)
+    return df
 
-news_feed = fetch_market_news(3)# Fetch 3 latest market news articles
-print(json.dumps(news_feed, indent=2))# Example usage: Fetching market news
+# Example usage: Fetching market news and printing the output as json
+# news_feed = fetch_market_news(3)# Fetch 3 latest market news articles
+# print(json.dumps(news_feed, indent=2))# Example usage: Fetching market news
+
+# Printing the output as dataframe
+# df = pd.DataFrame(news_feed)
+# print(df)
+
+# Show only selected columns and format the date column 
+# selected_df = df[['title', 'description', 'source', 'published_at', 'url']]
+# selected_df = df[['source', 'published_at']]
+# selected_df = df[['source', 'published_at']].copy()
+# Rename the column
+# selected_df = selected_df.rename(columns={'published_at': 'date'})
+# Convert and format the 'date' column to 'YYYY-MM-DD'
+# selected_df['date'] = pd.to_datetime(selected_df['date']).dt.strftime('%d-%m-%Y')
+# print(selected_df)
