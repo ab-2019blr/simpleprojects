@@ -10,3 +10,6 @@ mysql-connector-python
 python-dotenv
 streamlit 
 nsetools 
+plotly
+pymysql 
+nsepython 
