@@ -8,17 +8,20 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from config.database_config import DB_CONFIG  
 from config.database_config import DB_CONNECTION_STRING
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, Date, BigInteger, UniqueConstraint
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, Double, Date, BigInteger, UniqueConstraint
 from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 ####----Code to read CSV and upload to MySQL using SQLAlchemy----####
-# engine = None
-# try:
-#     # Read CSV file using pandas
+engine = None
+try:
+#     # Read CSV file using pandas - Code block for uploading NIFTY BANK bulk data
 #     df = pd.read_csv('nifty_bank_bulk_data.csv', parse_dates=['Date'], dayfirst=True)
-
+#     # Read CSV file using pandas - Code block for uploading BANK NIFTY index data
+    df = pd.read_csv('nifty_bank_index_data.csv', parse_dates=['HistoricalDate'], dayfirst=True)
+    # Drop columns not needed
+    df = df.drop(['RequestNumber', 'Index Name'], axis=1)
 #     # Rename columns to snake_case and compatible with SQL naming conventions
 #     df.rename(columns={
 #         'Symbol': 'symbol',
@@ -38,6 +41,19 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 #         '%DlyQttoTradedQty': 'percent_dly_qty_to_traded'
 #     }, inplace=True)
 
+    # Rename columns for SQL compatibility
+    df.rename(columns={
+        'INDEX_NAME': 'index_name',
+        'HistoricalDate': 'historical_date',
+        'OPEN': 'open',
+        'HIGH': 'high',
+        'LOW': 'low',
+        'CLOSE': 'close'
+    }, inplace=True)
+
+    # Parse historical_date to datetime
+    df['historical_date'] = pd.to_datetime(df['historical_date'], format="%d %b %Y")
+
 #     # Clean and convert data types
 #     for col in ['total_traded_quantity', 'number_of_trades', 'deliverable_qty']:
 #         df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -45,11 +61,14 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 #     for col in ['prev_close', 'open_price', 'high_price', 'low_price', 'last_price', 'close_price', 'average_price', 'turnover_in_rs', 'percent_dly_qty_to_traded']:
 #         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-#     # Create SQLAlchemy engine
-#     engine = create_engine(DB_CONNECTION_STRING)
+    # Clean and convert data types for BANK INFTY index data
+    for col in ['open', 'high', 'low', 'close']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    # Create SQLAlchemy engine
+    engine = create_engine(DB_CONNECTION_STRING)
 
-#     # Define metadata and table
-#     metadata = MetaData()
+    # Define metadata and table
+    metadata = MetaData()
 #     bank_nifty_table = Table(
 #         'bank_nifty_data', metadata,
 #         Column('id', Integer, primary_key=True, autoincrement=True),
@@ -70,25 +89,35 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 #         Column('percent_dly_qty_to_traded', Float),
 #         # UniqueConstraint('symbol', 'trade_date', name='uix_symbol_date')
 #     )
-
-#     # Create table if not exists
-#     metadata.create_all(engine)
+    bank_nifty_index_table = Table(
+        'bank_nifty_index_data', metadata,
+        Column('id', Integer, primary_key=True, autoincrement=True),
+        Column('index_name', String(30)),
+        Column('historical_date', Date),
+        Column('open', Double),
+        Column('high', Double),
+        Column('low', Double),
+        Column('close', Double)
+    )
+    # Create table if not exists
+    metadata.create_all(engine)
 
 #     # Insert or replace data using pandas to_sql (replace with 'append' if you want to add without deleting)
 #     df.to_sql('bank_nifty_data', con=engine, if_exists='append', index=False, method='multi')
+    df.to_sql('bank_nifty_index_data', con=engine, if_exists='append', index=False, method='multi')
 
-#     print("Data uploaded successfully.")
-# except FileNotFoundError:
-#     print(f"Error: The .csv file was not found.")
-# except SQLAlchemyError as e:
-#     print(f"Database error occurred: {e}")
-# except Exception as e:
-#     print(f"An unexpected error occurred: {e}")
-# finally:
-#     if engine:
-#         engine.dispose()  # Dispose the engine and close all connections
+    print("Data uploaded successfully.")
+except FileNotFoundError:
+    print(f"Error: The .csv file was not found.")
+except SQLAlchemyError as e:
+    print(f"Database error occurred: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+finally:
+    if engine:
+        engine.dispose()  # Dispose the engine and close all connections
 
-####----Code to read all Bank Nifty data from MySQL using SQLAlchemy----####
+####----Code to read all Bank Nifty bulk data from MySQL using SQLAlchemy----####
 def read_bank_nifty_data() -> pd.DataFrame:
     engine = None
     df = None
@@ -109,6 +138,26 @@ def read_bank_nifty_data() -> pd.DataFrame:
         if engine:
             engine.dispose()  # Dispose the engine and close all connections
 
+####----Code to read all Bank Nifty index data from MySQL using SQLAlchemy----####
+def read_bank_nifty_index_data() -> pd.DataFrame:
+    engine = None
+    df = None
+    try:
+        # Create SQLAlchemy engine
+        engine = create_engine(DB_CONNECTION_STRING)
+        # Read data from the table into a pandas DataFrame
+        query = 'SELECT * FROM bank_nifty_index_data'
+        df = pd.read_sql(query, con=engine)
+        return df
+    except SQLAlchemyError as e:
+        print(f"Database error occurred: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on error
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on error
+    finally:
+        if engine:
+            engine.dispose()  # Dispose the engine and close all connections
 
 ####----Sample code to connect to MySQL using mysql-connector-python----#### 
 # try:
