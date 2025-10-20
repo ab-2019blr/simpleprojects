@@ -64,8 +64,8 @@ import pandas as pd
 
 # Fetch NIFTY index data with chart url as a sample
 index_ticker = "NIFTY BANK"
-start_date = "01-Sep-2025"
-end_date = "19-Sep-2025"
+start_date = "01-Jul-2025"
+end_date = "17-Oct-2025"
 try:
     # print(nse_get_index_quote("NIFTY 50"))  # Uses nsepython to fetch and print NIFTY index quote
     # print(nse.get_index_quote("NIFTY 50"))  # Uses nsetools to fetch NIFTY index quote with chart url 

@@ -174,6 +174,7 @@ def read_bank_nifty_index_data() -> pd.DataFrame:
 #     if 'connection' in locals() and connection.is_connected():
 #         connection.close()  # Close the connection
 #         print("MySQL connection closed.") 
+
 ####----Using SQLAlchemy for database operations----####
 # Create SQLAlchemy engine for database operations  
 engine = create_engine(DB_CONNECTION_STRING)
