@@ -4,11 +4,12 @@ import mysql.connector
 from mysql.connector import Error
 import sys
 import os
+import json
 import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from config.database_config import DB_CONFIG  
 from config.database_config import DB_CONNECTION_STRING
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, Double, Date, BigInteger, UniqueConstraint
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, Double, Date, BigInteger, UniqueConstraint, JSON
 from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -16,12 +17,15 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 ####----Code to read CSV and upload to MySQL using SQLAlchemy----####
 engine = None
 try:
-#     # Read CSV file using pandas - Code block for uploading NIFTY BANK bulk data
-#     df = pd.read_csv('nifty_bank_bulk_data.csv', parse_dates=['Date'], dayfirst=True)
-#     # Read CSV file using pandas - Code block for uploading BANK NIFTY index data
-    df = pd.read_csv('nifty_bank_index_data.csv', parse_dates=['HistoricalDate'], dayfirst=True)
+    # # Read CSV file using pandas - Code block for uploading NIFTY BANK bulk data
+    # df = pd.read_csv('nifty_bank_bulk_data.csv', parse_dates=['Date'], dayfirst=True)
+    # # Read CSV file using pandas - Code block for uploading BANK NIFTY index data
+    # df = pd.read_csv('nifty_bank_index_data.csv', parse_dates=['HistoricalDate'], dayfirst=True)
+    # Read CSV file using pandas - Code vlock for uploading Nifty 50 stock quotes data
+    df = pd.read_csv('nifty50_stock_quotes.csv', parse_dates=['date365dAgo', 'date30dAgo'], dayfirst=True)
     # Drop columns not needed
-    df = df.drop(['RequestNumber', 'Index Name'], axis=1)
+    # df = df.drop(['RequestNumber', 'Index Name'], axis=1)
+    df = df.drop(['priority', 'identifier', 'series', 'stockIndClosePrice', 'ffmc'], axis=1)
 #     # Rename columns to snake_case and compatible with SQL naming conventions
 #     df.rename(columns={
 #         'Symbol': 'symbol',
@@ -42,18 +46,48 @@ try:
 #     }, inplace=True)
 
     # Rename columns for SQL compatibility
+    # df.rename(columns={
+    #     'INDEX_NAME': 'index_name',
+    #     'HistoricalDate': 'historical_date',
+    #     'OPEN': 'open',
+    #     'HIGH': 'high',
+    #     'LOW': 'low',
+    #     'CLOSE': 'close'
+    # }, inplace=True)
+
+    # Rename columns of Nifty 50 stock quotes data
     df.rename(columns={
-        'INDEX_NAME': 'index_name',
-        'HistoricalDate': 'historical_date',
-        'OPEN': 'open',
-        'HIGH': 'high',
-        'LOW': 'low',
-        'CLOSE': 'close'
+        'symbol': 'symbol',			
+        'open': 'open',	
+        'dayHigh': 'day_high',	
+        'dayLow': 'day_low',	
+        'lastPrice': 'last_price',	
+        'previousClose': 'previous_close',	
+        'change': 'change',	
+        'pChange': 'p_change',    
+        'totalTradedVolume': 'total_traded_volume',	
+        'totalTradedValue': 'total_traded_value',	
+        'yearHigh': 'year_high',	
+        'yearLow': 'year_low',	
+        'nearWKH': 'near_wk_high',	
+        'nearWKL': 'near_wk_low',
+        'perChange365d': 'per_change_365d',	
+        'perChange30d': 'per_change_30d',	
+        'date365dAgo': 'date_365d_ago',	
+        'date30dAgo': 'date_30d_ago',	
+        'chartTodayPath': 'chart_today_path',	    
+        'chart30dPath': 'chart_30d_path',	
+        'chart365dPath': 'chart_365d_path',	
+        'meta': 'meta'
     }, inplace=True)
-
+    
     # Parse historical_date to datetime
-    df['historical_date'] = pd.to_datetime(df['historical_date'], format="%d %b %Y")
-
+    # df['historical_date'] = pd.to_datetime(df['historical_date'], format="%d %b %Y")
+    # Parse date_365d_ago and date_30d_ago to datetime
+    df['date_365d_ago'] = pd.to_datetime(df['date_365d_ago'], format="%d %b %Y")
+    df['date_30d_ago'] = pd.to_datetime(df['date_30d_ago'], format="%d %b %Y")  
+    # Parse meta column to valid JSON 
+    df['meta'] = df['meta'].apply(json.dumps) 
 #     # Clean and convert data types
 #     for col in ['total_traded_quantity', 'number_of_trades', 'deliverable_qty']:
 #         df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -62,8 +96,13 @@ try:
 #         df[col] = pd.to_numeric(df[col], errors='coerce')
 
     # Clean and convert data types for BANK INFTY index data
-    for col in ['open', 'high', 'low', 'close']:
+    # for col in ['open', 'high', 'low', 'close']:
+    #     df[col] = pd.to_numeric(df[col], errors='coerce')
+
+    # Clean and convert data types for Nifty 50 stock quotes data
+    for col in ['open', 'day_high', 'day_low', 'last_price', 'previous_close', 'change', 'p_change', 'total_traded_volume', 'total_traded_value', 'year_high', 'year_low', 'near_wk_high', 'near_wk_low','per_change_365d', 'per_change_30d']:
         df[col] = pd.to_numeric(df[col], errors='coerce')
+    
     # Create SQLAlchemy engine
     engine = create_engine(DB_CONNECTION_STRING)
 
@@ -89,22 +128,49 @@ try:
 #         Column('percent_dly_qty_to_traded', Float),
 #         # UniqueConstraint('symbol', 'trade_date', name='uix_symbol_date')
 #     )
-    bank_nifty_index_table = Table(
-        'bank_nifty_index_data', metadata,
+    # bank_nifty_index_table = Table(
+    #     'bank_nifty_index_data', metadata,
+    #     Column('id', Integer, primary_key=True, autoincrement=True),
+    #     Column('index_name', String(30)),
+    #     Column('historical_date', Date),
+    #     Column('open', Double),
+    #     Column('high', Double),
+    #     Column('low', Double),
+    #     Column('close', Double)
+    # )
+    nifty50_stock_quotes_table = Table(
+        'nifty50_stock_quotes_data', metadata,
         Column('id', Integer, primary_key=True, autoincrement=True),
-        Column('index_name', String(30)),
-        Column('historical_date', Date),
+        Column('symbol', String(20), nullable=False),
         Column('open', Double),
-        Column('high', Double),
-        Column('low', Double),
-        Column('close', Double)
+        Column('day_high', Double),
+        Column('day_low', Double),
+        Column('last_price', Double),
+        Column('previous_close', Double),
+        Column('change', Double),
+        Column('p_change', Double),
+        Column('total_traded_volume', BigInteger),
+        Column('total_traded_value', BigInteger),
+        Column('year_high', Double),
+        Column('year_low', Double),
+        Column('near_wk_high', Double),
+        Column('near_wk_low', Double),
+        Column('per_change_365d', Double),
+        Column('per_change_30d', Double),
+        Column('date_365d_ago', Date),
+        Column('date_30d_ago', Date),
+        Column('chart_today_path', String(255)),
+        Column('chart_30d_path', String(255)),
+        Column('chart_365d_path', String(255)),
+        Column('meta', JSON)
     )
     # Create table if not exists
     metadata.create_all(engine)
 
 #     # Insert or replace data using pandas to_sql (replace with 'append' if you want to add without deleting)
 #     df.to_sql('bank_nifty_data', con=engine, if_exists='append', index=False, method='multi')
-    df.to_sql('bank_nifty_index_data', con=engine, if_exists='append', index=False, method='multi')
+    # df.to_sql('bank_nifty_index_data', con=engine, if_exists='append', index=False, method='multi')
+    df.to_sql('nifty50_stock_quotes_data', con=engine, if_exists='append', index=False, method='multi')
 
     print("Data uploaded successfully.")
 except FileNotFoundError:
@@ -159,6 +225,31 @@ def read_bank_nifty_index_data() -> pd.DataFrame:
         if engine:
             engine.dispose()  # Dispose the engine and close all connections
 
+
+def read_nifty50_stock_quotes_data(stock_symbol: str) -> dict:
+    engine = None
+    df = None
+    try:
+        # Create SQLAlchemy engine
+        engine = create_engine(DB_CONNECTION_STRING)
+        # Read data from the table into a pandas DataFrame
+        query = f"SELECT symbol, last_price, previous_close, `change`, p_change, total_traded_volume, total_traded_value, year_high, year_low FROM nifty50_stock_quotes_data WHERE symbol = '{stock_symbol}'"
+        df = pd.read_sql(query, con=engine)
+        return df.to_dict(orient='records')[0]  # Return as dictionary
+    except SQLAlchemyError as e:
+        print(f"Database error occurred: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on error
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on error
+    finally:
+        if engine:
+            engine.dispose()  # Dispose the engine and close all connections    
+            print("MySQL connection closed.")   
+
+# Test function to read Nifty 50 stock quotes data from MySQL using SQLAlchemy
+print(read_nifty50_stock_quotes_data('TCS')) 
+
 ####----Sample code to connect to MySQL using mysql-connector-python----#### 
 # try:
 #     connection = mysql.connector.connect(**DB_CONFIG)
@@ -175,7 +266,7 @@ def read_bank_nifty_index_data() -> pd.DataFrame:
 #         connection.close()  # Close the connection
 #         print("MySQL connection closed.") 
 
-####----Using SQLAlchemy for database operations----####
+####----Using SQLAlchemy for database operations using Users table in test_db----####
 # Create SQLAlchemy engine for database operations  
 engine = create_engine(DB_CONNECTION_STRING)
 Base = declarative_base()  # Base class for SQLAlchemy models
@@ -192,7 +283,7 @@ try:
     Session = sessionmaker(bind=engine)
     session = Session()  # Create a new session
 
-    # Read all data from the database table
+#     # Read all data from the database table
     def read_data():
         try:
             users = session.query(User).all()  # Query all records from the User table
@@ -202,7 +293,7 @@ try:
             print("Error while reading data:", e)
             return pd.DataFrame()
     
-    # Read specific data from the database table
+#     # Read specific data from the database table
     def read_specific_data(name: str) -> pd.DataFrame:
         try:
             user = session.query(User).filter(User.name == name).first()
@@ -219,12 +310,12 @@ try:
             print("Error while reading specific data:", e)
             return None
         
-    # Function call to read data
-    # read_data()
+#     # Function call to read data
+#     # read_data()
     
-    # Function call to read specific data
-    # df = read_specific_data("Alice")
-    # print(df.to_string(index=False))
+#     # Function call to read specific data
+#     # df = read_specific_data("Alice")
+#     # print(df.to_string(index=False))
     
 except Exception as e:
     print("Error while connecting to MySQL:", e)    
@@ -235,3 +326,4 @@ finally:
     if 'engine' in locals() and engine is not None:
         engine.dispose()
         print("MySQL connection closed.") 
+####----End of Using SQLAlchemy for database operations using Users table in test_db----####

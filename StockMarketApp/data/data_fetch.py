@@ -62,19 +62,21 @@ import pandas as pd
 #     print(f"Error fetching NIFTY BANK symbols: {e}")  # Log the error message
 #     bank_nifty_symbols = []  # Set symbols to an empty list in case of an error to avoid further errors
 
+###### IMPORTANT SECTION ######
 # Fetch NIFTY index data with chart url as a sample
-index_ticker = "NIFTY BANK"
-start_date = "01-Jul-2025"
-end_date = "17-Oct-2025"
-try:
-    # print(nse_get_index_quote("NIFTY 50"))  # Uses nsepython to fetch and print NIFTY index quote
-    # print(nse.get_index_quote("NIFTY 50"))  # Uses nsetools to fetch NIFTY index quote with chart url 
-    bank_nifty_df = index_history(index_ticker, start_date, end_date)
-    bank_nifty_df.to_csv('nifty_bank_index_data.csv', index=False)
-    print("Successfully fetched NIFTY BANK data.")  # Log success message
-    #  # Uses nsepython to fetch and print NIFTY index historical data 
-except Exception as e:
-    print(f"Error fetching NIFTY index data: {e}")  # Log the error message 
+# index_ticker = "NIFTY BANK"
+# start_date = "01-Jul-2025"
+# end_date = "17-Oct-2025"
+# try:
+#     # print(nse_get_index_quote("NIFTY 50"))  # Uses nsepython to fetch and print NIFTY index quote
+#     # print(nse.get_index_quote("NIFTY 50"))  # Uses nsetools to fetch NIFTY index quote with chart url 
+#     bank_nifty_df = index_history(index_ticker, start_date, end_date)
+#     bank_nifty_df.to_csv('nifty_bank_index_data.csv', index=False)
+#     print("Successfully fetched NIFTY BANK data.")  # Log success message
+#     #  # Uses nsepython to fetch and print NIFTY index historical data 
+# except Exception as e:
+#     print(f"Error fetching NIFTY index data: {e}")  # Log the error message 
+####### END OF IMPORTANT SECTION #######
 
 # This section of the file is for fetching bulk data for NSE 50, NIFTY BANK or NSE 500 stocks using nselib library
 # Loads the list of NSE 50, NIFTY BANK or NSE 500 symbols; assume 'Symbol' column is present in the CSV
@@ -120,3 +122,13 @@ except Exception as e:
 # except Exception as e:
 #     print(f"Error fetching NSE 50, NIFTY BANK or NSE 500 bulk data: {e}")  # Log the error message
 #     all_data = []  # Set all_data to an empty list in case of an error to avoid further errors 
+
+###### IMPORTANT SECTION ######
+# Fetch stock quotes from Nifty 50 as a sample
+try: 
+    nifty50_stock_quotes = nse.get_stock_quote_in_index(index='NIFTY 50', include_index=False)
+    pd.DataFrame(nifty50_stock_quotes).to_csv('nifty50_stock_quotes.csv', index=False)
+    print("Successfully fetched stock quotes for NIFTY 50.")  # Log success message
+except Exception as e:
+    print(f"Error fetching NIFTY 50 quotes: {e}")  # Log the error message 
+####### END OF IMPORTANT SECTION ####### 
