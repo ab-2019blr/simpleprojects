@@ -125,10 +125,104 @@ import pandas as pd
 
 ###### IMPORTANT SECTION ######
 # Fetch stock quotes from Nifty 50 as a sample
-try: 
-    nifty50_stock_quotes = nse.get_stock_quote_in_index(index='NIFTY 50', include_index=False)
-    pd.DataFrame(nifty50_stock_quotes).to_csv('nifty50_stock_quotes.csv', index=False)
-    print("Successfully fetched stock quotes for NIFTY 50.")  # Log success message
-except Exception as e:
-    print(f"Error fetching NIFTY 50 quotes: {e}")  # Log the error message 
+# try: 
+#     nifty50_stock_quotes = nse.get_stock_quote_in_index(index='NIFTY 50', include_index=False)
+#     pd.DataFrame(nifty50_stock_quotes).to_csv('nifty50_stock_quotes.csv', index=False)
+#     print("Successfully fetched stock quotes for NIFTY 50.")  # Log success message
+# except Exception as e:
+#     print(f"Error fetching NIFTY 50 quotes: {e}")  # Log the error message 
 ####### END OF IMPORTANT SECTION ####### 
+
+# Fetch Nifty Indexes data tickers for watchlist page
+# def fetch_nifty_indexes_tickers():
+#     try: 
+#         # df = capital_market.index_data(index='NIFTY 50', period='1D')  # Fetch Nifty 50 index data
+#         df = nse_index()  # Fetch Nifty Indexes data using nsepython
+#         # Save to CSV for reference
+#         pd.DataFrame(df).to_csv('nifty_indexes_data.csv', index=False)
+#         print("Successfully fetched Nifty Indexes data.")  # Log success message
+#         # Print the DataFrame to verify the fetched data
+#         # print(df.head()) # Debug line just to verify data
+#     except Exception as e:
+#         print(f"Error fetching Nifty Indexes data: {e}")
+#         df = pd.DataFrame()  # Return an empty DataFrame in case of an error
+# # Call the function to fetch Nifty Indexes data tickers
+# fetch_nifty_indexes_tickers()
+
+# Fetch Nifty Advance Decline data for dashboard page
+# def fetch_nifty_advance_decline_data():
+#     try: 
+#         df = nse_get_advances_declines()  # Fetch Nifty Advance Decline data using nsepython
+#         # Save to CSV for reference
+#         pd.DataFrame(df).to_csv('nifty_advance_decline_data.csv', index=False)
+#         print("Successfully fetched Nifty Advance Decline data.")  # Log success message
+#     except Exception as e:
+#         print(f"Error fetching Nifty Advance Decline data: {e}")
+#         return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
+# # Call the function to fetch Nifty Advance Decline data
+# fetch_nifty_advance_decline_data()
+
+# Fetch Nifty Top Gainers data for dashboard page
+# def fetch_nifty_top_gainers_data():
+#     try: 
+#         df = nse_get_top_gainers()  # Fetch Nifty Top Gainers and Losers data using nse python
+#         # Save to CSV for reference
+#         pd.DataFrame(df).to_csv('nifty_top_gainers_data.csv', index=False)
+#         print("Successfully fetched Nifty Top Gainers and Losers data.")  # Log success message
+#     except Exception as e:
+#         print(f"Error fetching Nifty Top Gainers and Losers data: {e}")
+#         return pd.DataFrame()  # Return an empty DataFrame in case of an error  
+
+# # Call the function to fetch Nifty Top Gainers data
+# fetch_nifty_top_gainers_data()
+
+# def fetch_nifty_top_losers_data():
+#     try:
+#         df = nse_get_top_losers()  # Fetch Nifty Top Losers data using nse python
+#         # Save to CSV for reference
+#         pd.DataFrame(df).to_csv('nifty_top_losers_data.csv', index=False)
+#         print("Successfully fetched Nifty Top Losers data.")  # Log success message
+#     except Exception as e:
+#         print(f"Error fetching Nifty Top Losers data: {e}")
+#         return pd.DataFrame()  # Return an empty DataFrame in case of an error  
+
+# # Call the function to fetch Nifty Top Losers data
+# fetch_nifty_top_losers_data()
+
+# Fetch Nifty Index valuation data for dashboard page - PE, PB, Div Yield
+# def fetch_nifty_index_valuation_data():
+#     try: 
+        # index_list = nse.get_index_list()  # Fetch Nifty Index list using nsepython
+        # # Flatten list if necessary
+        # if isinstance(index_list, list) and all(isinstance(i, list) for i in index_list):
+        #     index_list = [i[0] for i in index_list if i]
+        # # Create DataFrame with proper structure
+        # df = pd.DataFrame({'indexName': index_list})
+        # # Save to CSV with proper quoting to preserve spaces and special characters
+        # df.to_csv('nifty_index_list.csv', index=False, quoting=1)  # quoting=1 means QUOTE_ALL
+        # print("Successfully fetched Nifty Index valuation data.")  # Log success message
+        # df = pd.read_csv('nifty_index_list.csv', header=0)  # Read the saved CSV file
+        # names = df['indexName'].tolist()  # Extract the 'indexName' column as a list
+        # Fetch valuation data for each index and compile into a DataFrame
+        # all_valuation_data = []
+        # for name in names:
+        #     try:
+        #         valuation_data = nse.get_index_quote(index=name)
+        #         valuation_data['Index Name'] = name
+        #         all_valuation_data.append(valuation_data)
+        #     except Exception as e:
+        #         print(f"Failed to fetch valuation data for {name}: {e}")
+        # Convert the list of valuation data to a DataFrame
+    #     if all_valuation_data:
+    #         valuation_df = pd.DataFrame(all_valuation_data)
+    #         valuation_df.to_csv('nifty_index_valuation_data.csv', index=False)
+    #         print("Successfully fetched Nifty Index valuation data.")  # Log success message
+    #     else:
+    #         print("No valuation data fetched. Please check the index names or the connection.")
+    #     return valuation_df
+    # except Exception as e:
+    #     print(f"Error fetching Nifty Index valuation data: {e}")
+        
+# Call the function to fetch Nifty Index valuation data
+# fetch_nifty_index_valuation_data()
