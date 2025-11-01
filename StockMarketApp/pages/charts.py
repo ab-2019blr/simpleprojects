@@ -9,9 +9,9 @@ from data.database import read_bank_nifty_data, read_bank_nifty_index_data # Imp
 from data.data_processor import compute_rsi, compute_dma  # Importing compute_rsi function from data package
 
 # Set page configuration
-# st.set_page_config(page_title="Charts", layout="centered", page_icon="📉")
+st.set_page_config(page_title="Charts", layout="wide", page_icon="📉")
 
-# st.subheader("Secondary Page: Charting Page")
+st.subheader("Stock Market through Charts")
 # st.write("This is the secondary page of the StockMarketApp app.")
 # st.divider()
 
@@ -59,7 +59,7 @@ st.success("Chart displayed successfully!")
 st.divider()
 
 # Display RSI below the candlestick chart
-st.subheader("Relative Strength Index (RSI)")
+st.subheader("Relative Strength Index (RSI) Chart")
 @st.cache_data
 def get_rsi_data():
     return compute_rsi(df['close'], period=14)
@@ -97,6 +97,7 @@ df['date'], df['close'], df['20DMA'], df['50DMA'] = get_dma_data()
 # Reformat the date column for better readability 
 df['date'] = pd.to_datetime(df['date']).dt.strftime('%d-%b-%Y')
 # Just prepare DMA Plotly chart
+
 dma_fig = go.Figure()
 dma_fig.add_trace(go.Scatter(x=df['date'], y=df['close'], mode='lines', name='Close'))
 dma_fig.add_trace(go.Scatter(x=df['date'], y=df['20DMA'], mode='lines', name='20DMA'))
@@ -111,6 +112,7 @@ df = df.rename(columns={'date': 'Date', 'close': 'Closing Price', '20DMA': '20-D
 # Display DMA in Streamlit table format
 st.dataframe(df[['Date', 'Closing Price', '20-Day Moving Average', '50-Day Moving Average']].tail(10), hide_index=True)  # Show last 10 rows
 # Now render the DMA chart
+st.subheader("Daily Moving Average (DMA) Chart")
 st.plotly_chart(dma_fig, use_container_width=True)
 
 st.success("DMA data displayed successfully!")

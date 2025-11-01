@@ -10,6 +10,8 @@ from .data_processor import compute_rsi, compute_dma # Import data processing fu
 
 from .file_data_processor import read_csv_to_dataframe, read_top_gainers_csv_to_dataframe, read_top_losers_csv_to_dataframe, read_index_valuation_csv_to_dataframe # Import file data processing functions from file_data_processor module
 
+from .portfolio_data_processor import add_transaction, get_all_transactions, get_portfolio_summary, delete_transaction, TransactionType, Transaction, CurrentPrice, initialize_default_prices, update_current_prices, get_last_price_update, test_connection, get_database_stats # Import portfolio data processing functions from portfolio_data_processor module
+
 __all__ = [
     'read_data', 
     'read_specific_data', 
@@ -27,7 +29,19 @@ __all__ = [
     'read_nifty_stocks_quotes',
     'read_top_gainers_csv_to_dataframe',
     'read_top_losers_csv_to_dataframe',
-    'read_index_valuation_csv_to_dataframe' 
+    'read_index_valuation_csv_to_dataframe',
+    'add_transaction', 
+    'get_all_transactions',
+    'get_portfolio_summary',
+    'delete_transaction',
+    'TransactionType',
+    'Transaction',
+    'CurrentPrice',
+    'initialize_default_prices',
+    'update_current_prices',
+    'get_last_price_update',
+    'test_connection',
+    'get_database_stats'
 ]  # Define the public interface of the package
 
 # __all__ = ['etch_stock_ticker_finnhub', 'fetch_market_news', 'fetch_global_market_news', 'read_bank_nifty_data']  # Define the public interface of the package

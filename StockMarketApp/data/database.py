@@ -332,6 +332,21 @@ def read_nifty_stocks_quotes() -> pd.DataFrame:
         if engine:
             engine.dispose()  # Dispose the engine and close all connections    
             print("MySQL connection closed.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ####----Sample code to connect to MySQL using mysql-connector-python----#### 
 # try:
 #     connection = mysql.connector.connect(**DB_CONFIG)

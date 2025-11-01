@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data.database import read_data, read_specific_data, read_nifty_indexes_data, read_nifty_stocks_quotes # Importing read_data function from data package
 from data.file_data_processor import read_csv_to_dataframe, read_top_gainers_csv_to_dataframe, read_top_losers_csv_to_dataframe, read_index_valuation_csv_to_dataframe
 # Set page configuration
-st.set_page_config(page_title="Dashboard", layout="centered", page_icon="📊")
+st.set_page_config(page_title="Dashboard", layout="wide", page_icon="📊")
 
 st.title("Stock Market Dashboard")
 st.subheader("Nifty Indexes")

@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data.database import read_nifty50_stock_quotes_data # Importing read_data function from data package
 
 # Set page configuration
-st.set_page_config(page_title="Watchlist", layout="centered", page_icon="👀")
+st.set_page_config(page_title="Watchlist", layout="wide", page_icon="👀")
 
 st.subheader("Watchlist Management Page")
 
