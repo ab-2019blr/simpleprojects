@@ -166,7 +166,7 @@ st.markdown("""
 # MAIN APP HEADER
 # ================================================
 
-st.markdown('<h1 class="main-header">📈 Stock Portfolio Manager</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Stock Portfolio Manager</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Track your investments, monitor performance, and make informed decisions</p>', unsafe_allow_html=True)
 
 # ================================================
@@ -176,7 +176,7 @@ st.markdown('<p class="subtitle">Track your investments, monitor performance, an
 top_col1, top_col2, top_col3, top_col4 = st.columns([2, 1, 1, 1])
 
 with top_col2:
-    if st.button("🔄 Refresh Prices", use_container_width=True):
+    if st.button("Refresh Prices", use_container_width=True):
         with st.spinner("Updating current prices... Please wait"):
             # Clear all caches first
             st.cache_data.clear()
@@ -203,12 +203,12 @@ with top_col2:
 with top_col3:
     last_update = backend.get_last_price_update()
     if last_update:
-        st.info(f"🕐 Updated: {last_update.strftime('%H:%M:%S')}")
+        st.info(f"🕐 Last Updated: {last_update.strftime('%H:%M:%S')}")
     else:
-        st.info("🕐 No updates yet")
+        st.info("No updates yet")
 
 with top_col4:
-    if st.button("🗑️ Manage Transactions", use_container_width=True):
+    if st.button("Manage Transactions", use_container_width=True):
         st.session_state.show_delete_section = not st.session_state.show_delete_section
 
 st.divider()
@@ -227,9 +227,9 @@ with col_left:
     # Header with manual refresh option
     col_header1, col_header2 = st.columns([3, 1])
     with col_header1:
-        st.subheader("📊 Portfolio Holdings")
+        st.subheader("Portfolio Holdings")
     with col_header2:
-        if st.button("🔄 Refresh Data", use_container_width=True, key="refresh_portfolio"):
+        if st.button("Refresh Data", use_container_width=True, key="refresh_portfolio"):
             st.cache_data.clear()
             st.rerun()
     
@@ -252,20 +252,20 @@ with col_left:
             
             with metric_cols[0]:
                 st.metric(
-                    label="💰 Total Investment",
+                    label="Total Investment",
                     value=f"₹{metrics['total_investment']:,.2f}"
                 )
             
             with metric_cols[1]:
                 st.metric(
-                    label="💵 Current Value",
+                    label="Current Value",
                     value=f"₹{metrics['current_value']:,.2f}"
                 )
             
             with metric_cols[2]:
                 delta_color = "normal" if metrics['net_pl'] >= 0 else "inverse"
                 st.metric(
-                    label="📈 Net P/L",
+                    label="Net P/L",
                     value=f"₹{metrics['net_pl']:,.2f}",
                     delta=f"{metrics['pl_percent']:.2f}%",
                     delta_color=delta_color
@@ -273,7 +273,7 @@ with col_left:
             
             with metric_cols[3]:
                 st.metric(
-                    label="🏢 Total Stocks",
+                    label="Total Stocks",
                     value=metrics['total_stocks']
                 )
             
@@ -283,7 +283,7 @@ with col_left:
             # HOLDINGS TABLE (OPTIMIZED)
             # ============================================
             
-            st.markdown("#### 📋 Detailed Holdings")
+            st.markdown("#### Detailed Holdings")
             
             # Create DataFrame from tuple data
             df = pd.DataFrame(portfolio_list)
@@ -347,7 +347,7 @@ with col_left:
             # Export to CSV option
             csv = display_df.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="📥 Download Portfolio as CSV",
+                label="Download Portfolio as CSV",
                 data=csv,
                 file_name=f"portfolio_{date.today()}.csv",
                 mime="text/csv",
@@ -376,7 +376,7 @@ with col_left:
 if st.session_state.show_delete_section:
     with col_left:
         st.markdown("---")
-        with st.expander("🗑️ Delete Transactions", expanded=True):
+        with st.expander("Delete Transactions", expanded=True):
             try:
                 # Only fetch when section is visible (LAZY LOADING)
                 transactions = list(get_cached_transactions())  # Convert from tuple
@@ -397,7 +397,7 @@ if st.session_state.show_delete_section:
                     col_del1, col_del2 = st.columns(2)
                     
                     with col_del1:
-                        if st.button("🗑️ Confirm Delete", type="secondary", use_container_width=True):
+                        if st.button("Confirm Delete", type="secondary", use_container_width=True):
                             with st.spinner("Deleting transaction..."):
                                 success, message = backend.delete_transaction(selected_trans)
                                 if success:
@@ -584,8 +584,8 @@ with col_right:
             total_holdings = len(stats)
             total_qty = sum([s['quantity'] for s in stats])
             
-            st.metric("📈 Holdings", total_holdings)
-            st.metric("🔢 Total Shares", f"{total_qty:,}")
+            st.metric("Holdings", total_holdings)
+            st.metric("Total Shares", f"{total_qty:,}")
             
             # Show last transaction info
             recent_trans = list(get_cached_transactions())  # Convert from tuple
@@ -604,19 +604,21 @@ with col_right:
 # ================================================
 # FOOTER
 # ================================================
-
-st.markdown("---")
-footer_col1, footer_col2, footer_col3 = st.columns(3)
-
-with footer_col1:
-    st.markdown("📅 " + date.today().strftime("%d %B %Y"))
-
-with footer_col2:
-    st.markdown("<p style='text-align: center;'>Portfolio Manager Page</p>", unsafe_allow_html=True)
-
-with footer_col3:
-    st.markdown("<p style='text-align: right;'>v2.0.0 (Optimized)</p>", unsafe_allow_html=True)
-
+st.divider()
+st.markdown("""
+    <style>
+    .footer {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #888888;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    </style>
+    <div class="footer">
+        Developed by Ayan class XII for StockMarketApp project. | © 2025-26 
+    </div>
+""", unsafe_allow_html=True)
 # ================================================
 # DEBUG INFO (Uncomment for debugging)
 # ================================================

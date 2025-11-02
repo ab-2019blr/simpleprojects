@@ -1,6 +1,5 @@
 # This modlue handles processing of portfolio data including transaction records and performance metrics.
 # It also fetches and processes data from the database related to user portfolios.
-# Fetch external stock quotes and process them for portfolio analysis.
 
 import mysql.connector
 from mysql.connector import Error
@@ -145,20 +144,7 @@ def validate_transaction(stock_symbol, quantity, unit_price):
 # ================================================
 
 def add_transaction(stock_symbol, stock_name, transaction_date, quantity, unit_price):
-    """
-    Add a new transaction to database with validation
-    ALSO ensures current_price exists for the stock
-    
-    Args:
-        stock_symbol: Stock ticker symbol (e.g., "TCS.NS")
-        stock_name: Full company name
-        transaction_date: Date of transaction
-        quantity: Number of shares
-        unit_price: Price per share
-    
-    Returns:
-        tuple: (success: bool, message: str)
-    """
+    # Add transaction to the database
     # Validate first
     valid, errors = validate_transaction(stock_symbol, quantity, unit_price)
     if not valid:
@@ -214,13 +200,7 @@ def add_transaction(stock_symbol, stock_name, transaction_date, quantity, unit_p
 
 # Also add this helper function to sync missing prices
 def sync_missing_prices():
-    """
-    Sync current_prices table with transactions table
-    Creates price entries for any stocks in transactions that don't have prices
-    
-    Returns:
-        tuple: (success: bool, message: str)
-    """
+    # Sync missing current prices for stocks in transactions
     session = None
     try:
         session = get_db_session()
@@ -328,14 +308,7 @@ def delete_transaction(transaction_id):
 # ================================================
 
 def get_portfolio_summary():
-    """
-    Get aggregated portfolio holdings with current prices (OPTIMIZED)
-    Uses single query for all prices instead of N+1 queries
-    FIXED: Proper type conversion for Decimal/Float operations
-    
-    Returns:
-        tuple: (success: bool, data: list or error_message: str)
-    """
+    # Calculate portfolio summary
     session = None
     try:
         session = get_db_session()
@@ -402,15 +375,7 @@ def get_portfolio_summary():
             session.close()
 
 def calculate_portfolio_metrics(portfolio_data):
-    """
-    Calculate overall portfolio metrics with enhanced validation
-    
-    Args:
-        portfolio_data: List of portfolio holdings
-    
-    Returns:
-        dict: Portfolio metrics
-    """
+    # Calculate portfolio performance metrics
     default_metrics = {
         'total_investment': 0.0,
         'current_value': 0.0,
