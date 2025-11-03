@@ -1,8 +1,16 @@
-# Indian Stock Market Application - Architecture Design
+# StockMarketApp - Technical Architecture Design
 
 ## Overview
 
-A comprehensive stock market application built with Streamlit and Python, designed to pull Indian stock data from free APIs, store it in MySQL database, and provide advanced analytics including watchlists, charts, and market insights.
+A comprehensive Indian stock market analytics application built with Streamlit and Python, providing real-time market data, advanced technical analysis, portfolio management, and intelligent insights. The application demonstrates enterprise-level software development practices applied to financial technology, integrating multiple data sources with sophisticated analytical capabilities.
+
+**Key Features:**
+- Real-time market dashboard with live tickers and analytics
+- Advanced charting system with technical indicators (RSI, Moving Averages)
+- Portfolio management with P&L tracking and performance metrics
+- Watchlist management with dynamic stock selection
+- News integration with market updates and global coverage
+- Interactive data visualization using Plotly charts
 
 ## Table of Contents
 
@@ -18,189 +26,216 @@ A comprehensive stock market application built with Streamlit and Python, design
 ## Technology Stack
 
 ### Core Framework
-- **Streamlit**: Web application framework
-- **MySQL**: Primary database for stock data
-- **SQLAlchemy**: ORM for database operations
-- **Python 3.9+**: Core programming language
+- **Streamlit 1.28+**: Modern web application framework for rapid development
+- **MySQL 8.0+**: Primary database for historical and real-time stock data
+- **SQLAlchemy 1.4+**: ORM for database operations and connection management
+- **Python 3.9+**: Core programming language with type hints
 
-### Data & APIs
-- **yfinance**: Yahoo Finance API wrapper
-- **Alpha Vantage**: Alternative stock data API
-- **pandas**: Data manipulation and analysis
-- **numpy**: Numerical computations
+### Data Sources & APIs
+- **yfinance**: Primary Yahoo Finance API wrapper for Indian stock data
+- **Alpha Vantage**: Secondary data source for technical indicators and news
+- **NSE Tools**: Integration for NSE-specific data and indices
+- **pandas 1.5+**: Advanced data manipulation and analysis
+- **numpy 1.21+**: Numerical computations for technical indicators
 
-### Visualization
-- **Plotly**: Interactive charts and graphs
-- **plotly.graph_objects**: Advanced chart customization
-- **streamlit-aggrid**: Enhanced data tables
+### Visualization & UI
+- **Plotly 5.15+**: Interactive charts with candlestick and technical overlays
+- **plotly.graph_objects**: Advanced chart customization and real-time updates
+- **Streamlit components**: Custom UI elements for enhanced user experience
 
-### Additional Libraries
-- **requests**: HTTP requests for API calls
-- **schedule**: Background job scheduling
-- **streamlit-option-menu**: Enhanced navigation
-- **python-dotenv**: Environment variable management
+### Performance & Optimization
+- **Streamlit caching**: @st.cache_data for expensive operations
+- **Database indexing**: Optimized queries with proper indexing strategy
+- **Session state management**: Persistent user data across page interactions
+- **Lazy loading**: On-demand data loading for improved performance
 
 ## Project Structure
 
 ```
-stock_market_app/
-├── README.md
-├── requirements.txt
-├── .env.example
-├── .gitignore
+StockMarketApp/
 ├── app.py                    # Main Streamlit application entry point
+├── requirements.txt          # Python dependencies
+├── readme.md                # Project overview and setup instructions
+├── .gitignore               # Git ignore patterns
 │
-├── config/                   # Configuration files
+├── config/                  # Configuration management
 │   ├── __init__.py
-│   ├── settings.py          # Application settings
-│   └── database_config.py   # Database configuration
+│   ├── database_config.py   # Database connection settings
+│   ├── api_config.py        # API configurations and keys
+│   └── settings.py          # Application-wide settings
 │
-├── data/                    # Data layer components
+├── data/                    # Data layer and processing
 │   ├── __init__.py
-│   ├── database.py          # Database models and connections
-│   ├── api_client.py        # External API integrations
-│   └── data_processor.py    # Data processing and calculations
+│   ├── database.py          # MySQL integration with SQLAlchemy
+│   ├── api_client.py        # External API integrations (Yahoo, Alpha Vantage)
+│   ├── data_processor.py    # Technical analysis calculations
+│   ├── data_fetch.py        # Data collection and validation
+│   ├── portfolio_data_processor.py # Portfolio-specific calculations
+│   ├── file_data_processor.py # File-based data processing
+│   └── *.csv               # Static data files (symbols, indices)
 │
-├── pages/                   # Streamlit pages
+├── pages/                   # Application pages and modules
 │   ├── __init__.py
-│   ├── dashboard.py         # Main dashboard page
-│   ├── analytics.py         # Analytics and reports
-│   ├── watchlist.py         # Watchlist management
-│   ├── charts.py           # Advanced charting page
-│   └── news.py             # News and research page
+│   ├── dashboard.py         # Market overview and real-time analytics
+│   ├── charts.py            # Advanced charting with technical indicators
+│   ├── portfolio.py         # Portfolio management and P&L tracking
+│   ├── watchlist.py         # Stock watchlist management
+│   └── news.py              # Market news integration
 │
-├── utils/                   # Utility functions
+├── utils/                   # Utility functions and helpers
 │   ├── __init__.py
-│   ├── charts.py           # Chart generation utilities
-│   ├── calculations.py     # Technical indicator calculations
-│   ├── helpers.py          # Common helper functions
-│   └── constants.py        # Application constants
+│   ├── calculations.py      # Financial calculations and metrics
+│   ├── charts.py            # Chart generation utilities
+│   ├── helpers.py           # Common helper functions
+│   └── constants.py         # Application constants
 │
-├── assets/                  # Static assets
+├── assets/                  # Static assets and styling
 │   ├── css/
-│   │   └── custom.css      # Custom styling
+│   │   └── custom.css       # Custom CSS styling
 │   └── images/
-│       └── logo.png        # Application logo
+│       ├── stock_market_image.jpg
+│       └── stock_market_2.jpg
 │
-├── scripts/                 # Utility scripts
-│   ├── data_migration.py   # Database migration scripts
-│   ├── initial_setup.py    # Initial data setup
-│   └── backup_restore.py   # Database backup utilities
+├── scripts/                 # Database and deployment scripts
+│   ├── backup_restore.py    # Database backup utilities
+│   ├── data_migration.py    # Data migration scripts
+│   ├── db_setup.sql         # Database schema setup
+│   ├── initial_setup.py     # Initial application setup
+│   ├── portfolio_tables.sql # Portfolio-specific tables
+│   └── seed_data.sql        # Sample data insertion
 │
-└── tests/                   # Test files
-    ├── __init__.py
-    ├── test_database.py
-    ├── test_api_client.py
-    └── test_calculations.py
+└── doc/                     # Comprehensive documentation
+    ├── StockMarketApp_Project_Report.md # Main project report
+    ├── architecture.md      # Technical architecture guide
+    ├── api_documentation.md # API integration documentation
+    ├── functional_modules.md # Module specifications
+    ├── deployment_guide.md  # Deployment instructions
+    ├── srs_document.md      # System requirements specification
+    ├── brd.md              # Business requirements document
+    ├── project_plan.md     # Development project plan
+    └── *.mermaid           # Architecture diagrams
 ```
 
 ## Database Schema
 
-### Core Tables
+### Core Tables for Indian Stock Market Data
 
-#### stocks
+#### indian_stocks (Master Stock Information)
 ```sql
-CREATE TABLE stocks (
+CREATE TABLE indian_stocks (
     id INT PRIMARY KEY AUTO_INCREMENT,
     symbol VARCHAR(20) UNIQUE NOT NULL,
-    company_name VARCHAR(200) NOT NULL,
+    company_name VARCHAR(255) NOT NULL,
     sector VARCHAR(100),
-    industry VARCHAR(150),
     market_cap DECIMAL(15,2),
-    listing_date DATE,
+    exchange ENUM('NSE', 'BSE') DEFAULT 'NSE',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     INDEX idx_symbol (symbol),
     INDEX idx_sector (sector),
-    INDEX idx_market_cap (market_cap)
+    INDEX idx_exchange (exchange)
 );
 ```
 
-#### stock_prices
+#### daily_stock_data (Historical OHLCV Data)
 ```sql
-CREATE TABLE stock_prices (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE daily_stock_data (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     stock_id INT NOT NULL,
-    date DATE NOT NULL,
+    trade_date DATE NOT NULL,
     open_price DECIMAL(10,2) NOT NULL,
     high_price DECIMAL(10,2) NOT NULL,
     low_price DECIMAL(10,2) NOT NULL,
     close_price DECIMAL(10,2) NOT NULL,
-    adj_close DECIMAL(10,2),
     volume BIGINT NOT NULL,
+    turnover DECIMAL(15,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_stock_date (stock_id, date),
-    INDEX idx_date (date),
-    INDEX idx_stock_date (stock_id, date)
+    FOREIGN KEY (stock_id) REFERENCES indian_stocks(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_stock_date (stock_id, trade_date),
+    INDEX idx_trade_date (trade_date),
+    INDEX idx_stock_date (stock_id, trade_date)
 );
 ```
 
-#### watchlists
+#### portfolio_transactions (Portfolio Management)
 ```sql
-CREATE TABLE watchlists (
+CREATE TABLE portfolio_transactions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    is_default BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-#### watchlist_stocks
-```sql
-CREATE TABLE watchlist_stocks (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    watchlist_id INT NOT NULL,
-    stock_id INT NOT NULL,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (watchlist_id) REFERENCES watchlists(id) ON DELETE CASCADE,
-    FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_watchlist_stock (watchlist_id, stock_id)
-);
-```
-
-#### technical_indicators
-```sql
-CREATE TABLE technical_indicators (
-    stock_id INT NOT NULL,
-    date DATE NOT NULL,
-    sma_20 DECIMAL(10,2),
-    sma_50 DECIMAL(10,2),
-    sma_200 DECIMAL(10,2),
-    ema_12 DECIMAL(10,2),
-    ema_26 DECIMAL(10,2),
-    rsi DECIMAL(5,2),
-    macd DECIMAL(10,4),
-    macd_signal DECIMAL(10,4),
-    bollinger_upper DECIMAL(10,2),
-    bollinger_lower DECIMAL(10,2),
+    stock_symbol VARCHAR(20) NOT NULL,
+    transaction_type ENUM('BUY', 'SELL') NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    transaction_date DATE NOT NULL,
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    PRIMARY KEY (stock_id, date),
-    FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE,
-    INDEX idx_date (date)
+    INDEX idx_stock_symbol (stock_symbol),
+    INDEX idx_transaction_date (transaction_date)
 );
 ```
 
-#### market_indices
+#### nifty_indexes_data (Market Indices)
 ```sql
-CREATE TABLE market_indices (
+CREATE TABLE nifty_indexes_data (
     id INT PRIMARY KEY AUTO_INCREMENT,
     index_name VARCHAR(50) NOT NULL,
     index_value DECIMAL(10,2) NOT NULL,
     change_points DECIMAL(10,2),
     change_percent DECIMAL(5,2),
-    date DATE NOT NULL,
+    pe_ratio DECIMAL(8,2),
+    pb_ratio DECIMAL(8,2),
+    date_recorded DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    UNIQUE KEY unique_index_date (index_name, date),
-    INDEX idx_date (date)
+    UNIQUE KEY unique_index_date (index_name, date_recorded),
+    INDEX idx_date_recorded (date_recorded)
+);
+```
+
+#### nifty50_stock_quotes_data (Real-time Stock Quotes)
+```sql
+CREATE TABLE nifty50_stock_quotes_data (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    symbol VARCHAR(20) NOT NULL,
+    company_name VARCHAR(255),
+    current_price DECIMAL(10,2),
+    change_points DECIMAL(10,2),
+    change_percent DECIMAL(5,2),
+    volume BIGINT,
+    market_cap DECIMAL(15,2),
+    pe_ratio DECIMAL(8,2),
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    UNIQUE KEY unique_symbol (symbol),
+    INDEX idx_last_updated (last_updated)
+);
+```
+
+#### bank_nifty_data (Bulk Trading Data)
+```sql
+CREATE TABLE bank_nifty_data (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    symbol VARCHAR(20) NOT NULL,
+    series VARCHAR(10),
+    trade_date DATE NOT NULL,
+    prev_close DECIMAL(10,2),
+    open_price DECIMAL(10,2),
+    high_price DECIMAL(10,2),
+    low_price DECIMAL(10,2),
+    last_price DECIMAL(10,2),
+    close_price DECIMAL(10,2),
+    avg_price DECIMAL(10,2),
+    ttl_trd_qnty BIGINT,
+    turnover_lacs DECIMAL(15,2),
+    no_of_trades INT,
+    deliv_qty BIGINT,
+    deliv_per DECIMAL(5,2),
+    
+    INDEX idx_symbol_date (symbol, trade_date),
+    INDEX idx_trade_date (trade_date)
 );
 ```
 
