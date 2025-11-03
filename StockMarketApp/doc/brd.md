@@ -8,8 +8,8 @@
 |---------------|-------------|
 | **Document Title** | StockMarketApp - Business Requirements Document |
 | **Version** | 1.0 |
-| **Date** | December 2024 |
-| **Project Code** | STOCKAPP-2024 |
+| **Date** | July 2025 |
+| **Project Code** | STOCKAPP-2025 |
 | **Document Owner** | Product Management Team |
 | **Status** | Complete & Production Ready |
 | **Classification** | Internal |
